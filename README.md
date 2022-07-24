@@ -7,8 +7,8 @@ Easily create, edit, delete, filter Avondale College co-curricular activities av
 - [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet/3.1)
 
 ### Installation
-- Download and open the project.
-- Run the project on Release.
+1. Download and open the project.
+2. Run the project on Release.
 
 #### Git Commands
 1. ```git clone https://github.com/LucasMcKinney/AvcolCoCurricularWebsite.git```
