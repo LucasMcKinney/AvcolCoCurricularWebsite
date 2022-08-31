@@ -5,9 +5,11 @@ namespace AvcolCoCurricularWebsite.Models
 {
     public class PersonalInformation
     {
-        [Display(Name = "Staff Name")]
+        [Display(Name = "Staff")]
         [Key]
         public int StaffID { get; set; }
+
+        public Staff Staff { get; set; }
 
         [Display(Name = "Date of Birth")]
         [DataType(DataType.Date)]
@@ -48,7 +50,5 @@ namespace AvcolCoCurricularWebsite.Models
         [Display(Name = "Email Address")]
         [EmailAddress]
         public string EmailAddress { get; set; }
-
-        public Staff Staff { get; set; }
     }
 }

@@ -17,4 +17,16 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Activities\" />
+    <Folder Include="Pages\Clubs\" />
+    <Folder Include="Pages\Music\" />
+    <Folder Include="Pages\PerformingArts\" />
+    <Folder Include="Pages\PersonalInformation\" />
+    <Folder Include="Pages\ScholarshipTutorials\" />
+    <Folder Include="Pages\Sports\" />
+    <Folder Include="Pages\Staff\" />
+    <Folder Include="Pages\SubjectTutorials\" />
+  </ItemGroup>
+
 </Project>

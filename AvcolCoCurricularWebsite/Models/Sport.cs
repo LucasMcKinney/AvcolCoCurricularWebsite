@@ -11,6 +11,8 @@ namespace AvcolCoCurricularWebsite.Models
         [Required]
         public int ActivityID { get; set; }
 
+        public Activity Activity { get; set; }
+
         [Display(Name = "Room Number")]
         [StringLength(3, ErrorMessage = "Invalid Room Number. Room Number must be 3 characters long.")]
         [Required]
@@ -31,7 +33,5 @@ namespace AvcolCoCurricularWebsite.Models
         [DisplayFormat(DataFormatString = "{0:hh:mm:ss}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "This field cannot be left empty.")]
         public DateTime EndTime { get; set; }
-
-        public Activity Activity { get; set; }
     }
 }
