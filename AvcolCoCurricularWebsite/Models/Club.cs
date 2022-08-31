@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AvcolCoCurricularWebsite.Models
 {
-    public class Sports
+    public class Club
     {
-        public int SportID { get; set; }
+        public int ClubID { get; set; }
 
         [Display(Name = "Activity")]
         [Required]
@@ -32,6 +32,6 @@ namespace AvcolCoCurricularWebsite.Models
         [Required(ErrorMessage = "This field cannot be left empty.")]
         public DateTime EndTime { get; set; }
 
-        public Activities Activities { get; set; }
+        public Activity Activity { get; set; }
     }
 }

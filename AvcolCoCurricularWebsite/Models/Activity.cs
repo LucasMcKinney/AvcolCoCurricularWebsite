@@ -2,7 +2,7 @@
 
 namespace AvcolCoCurricularWebsite.Models
 {
-    public class Activities
+    public class Activity
     {
         public int ActivityID { get; set; }
 

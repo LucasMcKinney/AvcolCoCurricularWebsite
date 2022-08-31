@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AvcolCoCurricularWebsite.Models
 {
-    public class PerformingArts
+    public class PerformingArt
     {
         public int PerformingArtID { get; set; }
 
@@ -32,6 +32,6 @@ namespace AvcolCoCurricularWebsite.Models
         [Required(ErrorMessage = "This field cannot be left empty.")]
         public DateTime EndTime { get; set; }
 
-        public Activities Activities { get; set; }
+        public Activity Activity { get; set; }
     }
 }

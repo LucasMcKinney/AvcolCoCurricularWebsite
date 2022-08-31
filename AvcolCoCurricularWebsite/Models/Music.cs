@@ -32,6 +32,6 @@ namespace AvcolCoCurricularWebsite.Models
         [Required(ErrorMessage = "This field cannot be left empty.")]
         public DateTime EndTime { get; set; }
 
-        public Activities Activities { get; set; }
+        public Activity Activity { get; set; }
     }
 }
