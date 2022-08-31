@@ -17,14 +17,6 @@ namespace AvcolCoCurricularWebsite.Models
         [Required(ErrorMessage = "This field cannot be left empty.")]
         public string FirstName { get; set; }
 
-        public string FullName
-        {
-            get
-            {
-                return LastName + " " + FirstName;
-            }
-        }
-
         [Display(Name = "Teacher Code")]
         public string TeacherCode { get; set; }
 
@@ -33,5 +25,15 @@ namespace AvcolCoCurricularWebsite.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "This field cannot be left empty.")]
         public DateTime HireDate { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                return LastName + " " + FirstName;
+            }
+        }
+
+        public PersonalInformation PersonalInformation { get; set; }
     }
 }

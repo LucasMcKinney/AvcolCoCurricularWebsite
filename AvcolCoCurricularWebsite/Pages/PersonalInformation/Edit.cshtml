@@ -1,0 +1,70 @@
+﻿@page
+@model AvcolCoCurricularWebsite.Pages.PersonalInformation.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>PersonalInformation</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="PersonalInformation.StaffID" />
+            <div class="form-group">
+                <label asp-for="PersonalInformation.DateOfBirth" class="control-label"></label>
+                <input asp-for="PersonalInformation.DateOfBirth" class="form-control" />
+                <span asp-validation-for="PersonalInformation.DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PersonalInformation.Address" class="control-label"></label>
+                <input asp-for="PersonalInformation.Address" class="form-control" />
+                <span asp-validation-for="PersonalInformation.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PersonalInformation.PhoneNumber" class="control-label"></label>
+                <input asp-for="PersonalInformation.PhoneNumber" class="form-control" />
+                <span asp-validation-for="PersonalInformation.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PersonalInformation.ECPhoneNumber" class="control-label"></label>
+                <input asp-for="PersonalInformation.ECPhoneNumber" class="form-control" />
+                <span asp-validation-for="PersonalInformation.ECPhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PersonalInformation.ECRelationship" class="control-label"></label>
+                <input asp-for="PersonalInformation.ECRelationship" class="form-control" />
+                <span asp-validation-for="PersonalInformation.ECRelationship" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PersonalInformation.CitizenStatus" class="control-label"></label>
+                <input asp-for="PersonalInformation.CitizenStatus" class="form-control" />
+                <span asp-validation-for="PersonalInformation.CitizenStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PersonalInformation.Ethnicity" class="control-label"></label>
+                <input asp-for="PersonalInformation.Ethnicity" class="form-control" />
+                <span asp-validation-for="PersonalInformation.Ethnicity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PersonalInformation.EmailAddress" class="control-label"></label>
+                <input asp-for="PersonalInformation.EmailAddress" class="form-control" />
+                <span asp-validation-for="PersonalInformation.EmailAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

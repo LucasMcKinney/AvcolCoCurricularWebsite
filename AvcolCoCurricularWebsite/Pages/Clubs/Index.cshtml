@@ -1,0 +1,60 @@
+﻿@page
+@model AvcolCoCurricularWebsite.Pages.Clubs.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Club[0].Activity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Club[0].RoomNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Club[0].Day)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Club[0].StartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Club[0].EndTime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Club) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Activity.ActivityName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RoomNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Day)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndTime)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.ClubID">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.ClubID">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.ClubID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -13,5 +13,14 @@ namespace AvcolCoCurricularWebsite.Data
             : base(options)
         {
         }
+        public DbSet<AvcolCoCurricularWebsite.Models.Activity> Activity { get; set; }
+        public DbSet<AvcolCoCurricularWebsite.Models.Club> Club { get; set; }
+        public DbSet<AvcolCoCurricularWebsite.Models.Music> Music { get; set; }
+        public DbSet<AvcolCoCurricularWebsite.Models.PerformingArt> PerformingArt { get; set; }
+        public DbSet<AvcolCoCurricularWebsite.Models.PersonalInformation> PersonalInformation { get; set; }
+        public DbSet<AvcolCoCurricularWebsite.Models.ScholarshipTutorial> ScholarshipTutorial { get; set; }
+        public DbSet<AvcolCoCurricularWebsite.Models.Sport> Sport { get; set; }
+        public DbSet<AvcolCoCurricularWebsite.Models.Staff> Staff { get; set; }
+        public DbSet<AvcolCoCurricularWebsite.Models.SubjectTutorial> SubjectTutorial { get; set; }
     }
 }
