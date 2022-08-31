@@ -11,7 +11,7 @@ namespace AvcolCoCurricularWebsite.Models
         [Required]
         public string ActivityName { get; set; }
 
-        [Display(Name = "Staff Name")]
+        [Display(Name = "Staff In Charge")]
         [Required]
         public int StaffID { get; set; }
 
@@ -19,6 +19,7 @@ namespace AvcolCoCurricularWebsite.Models
         [Required(ErrorMessage = "This field cannot be left empty.")]
         public string SignUpForm { get; set; }
 
+        [Display(Name = "Staff In Charge")]
         public Staff Staff { get; set; }
     }
 }
