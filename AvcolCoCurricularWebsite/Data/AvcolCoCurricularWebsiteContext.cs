@@ -13,6 +13,7 @@ namespace AvcolCoCurricularWebsite.Data
             : base(options)
         {
         }
+
         public DbSet<AvcolCoCurricularWebsite.Models.Activity> Activity { get; set; }
         public DbSet<AvcolCoCurricularWebsite.Models.Club> Club { get; set; }
         public DbSet<AvcolCoCurricularWebsite.Models.Music> Music { get; set; }

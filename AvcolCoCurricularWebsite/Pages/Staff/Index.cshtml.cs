@@ -20,10 +20,22 @@ namespace AvcolCoCurricularWebsite.Pages.Staff
         }
 
         public IList<Models.Staff> Staff { get;set; }
+        [BindProperty(SupportsGet = true)]
+        public string SearchString { get; set; }
 
         public async Task OnGetAsync()
         {
             Staff = await _context.Staff.ToListAsync();
+
+            var staff = from s in _context.Staff
+                        select s;
+
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                staff = staff.Where(s => s.TeacherCode.Contains(SearchString));
+            }
+
+            Staff = await staff.ToListAsync();
         }
     }
 }

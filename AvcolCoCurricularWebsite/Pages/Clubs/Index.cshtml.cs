@@ -20,11 +20,23 @@ namespace AvcolCoCurricularWebsite.Pages.Clubs
         }
 
         public IList<Club> Club { get;set; }
+        [BindProperty(SupportsGet = true)]
+        public string SearchString { get; set; }
 
         public async Task OnGetAsync()
         {
             Club = await _context.Club
                 .Include(c => c.Activity).ToListAsync();
+
+            var clubs = from c in _context.Club
+                        select c;
+
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                clubs = clubs.Where(s => s.Activity.ActivityName.Contains(SearchString));
+            }
+
+            Club = await clubs.ToListAsync();
         }
     }
 }

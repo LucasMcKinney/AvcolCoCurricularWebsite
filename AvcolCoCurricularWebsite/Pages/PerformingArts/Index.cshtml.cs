@@ -20,11 +20,23 @@ namespace AvcolCoCurricularWebsite.Pages.PerformingArts
         }
 
         public IList<PerformingArt> PerformingArt { get;set; }
+        [BindProperty(SupportsGet = true)]
+        public string SearchString { get; set; }
 
         public async Task OnGetAsync()
         {
             PerformingArt = await _context.PerformingArt
                 .Include(p => p.Activity).ToListAsync();
+
+            var performingarts = from p in _context.PerformingArt
+                                 select p;
+
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                performingarts = performingarts.Where(s => s.Activity.ActivityName.Contains(SearchString));
+            }
+
+            PerformingArt = await performingarts.ToListAsync();
         }
     }
 }

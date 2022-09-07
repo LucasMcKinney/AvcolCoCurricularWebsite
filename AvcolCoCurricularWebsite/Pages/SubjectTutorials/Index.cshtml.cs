@@ -20,11 +20,23 @@ namespace AvcolCoCurricularWebsite.Pages.SubjectTutorials
         }
 
         public IList<SubjectTutorial> SubjectTutorial { get;set; }
+        [BindProperty(SupportsGet = true)]
+        public string SearchString { get; set; }
 
         public async Task OnGetAsync()
         {
             SubjectTutorial = await _context.SubjectTutorial
                 .Include(s => s.Activity).ToListAsync();
+
+            var subjecttutorials = from s in _context.SubjectTutorial
+                                   select s;
+
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                subjecttutorials = subjecttutorials.Where(s => s.Activity.ActivityName.Contains(SearchString));
+            }
+
+            SubjectTutorial = await subjecttutorials.ToListAsync();
         }
     }
 }

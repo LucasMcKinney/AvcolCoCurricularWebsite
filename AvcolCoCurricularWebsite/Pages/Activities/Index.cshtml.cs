@@ -20,11 +20,23 @@ namespace AvcolCoCurricularWebsite.Pages.Activities
         }
 
         public IList<Activity> Activity { get;set; }
+        [BindProperty(SupportsGet = true)]
+        public string SearchString { get; set; }
 
         public async Task OnGetAsync()
         {
             Activity = await _context.Activity
                 .Include(a => a.Staff).ToListAsync();
+
+            var activities = from a in _context.Activity
+                             select a;
+
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                activities = activities.Where(s => s.ActivityName.Contains(SearchString));
+            }
+
+            Activity = await activities.ToListAsync();
         }
     }
 }

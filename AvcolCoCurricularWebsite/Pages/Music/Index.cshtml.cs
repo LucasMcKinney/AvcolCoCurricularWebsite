@@ -20,11 +20,23 @@ namespace AvcolCoCurricularWebsite.Pages.Music
         }
 
         public IList<Models.Music> Music { get;set; }
+        [BindProperty(SupportsGet = true)]
+        public string SearchString { get; set; }
 
         public async Task OnGetAsync()
         {
             Music = await _context.Music
                 .Include(m => m.Activity).ToListAsync();
+
+            var music = from m in _context.Music
+                        select m;
+
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                music = music.Where(s => s.Activity.ActivityName.Contains(SearchString));
+            }
+
+            Music = await music.ToListAsync();
         }
     }
 }
