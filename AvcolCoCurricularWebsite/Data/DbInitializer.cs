@@ -1,26 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using AvcolCoCurricularWebsite.Data;
+﻿using AvcolCoCurricularWebsite.Data;
+using AvcolCoCurricularWebsite.Models;
 using System;
 using System.Linq;
 
-namespace AvcolCoCurricularWebsite.Models
+namespace AvcolCoCurricularWebsite.Data
 {
-    public static class SeedData
+    public static class DbInitializer
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static void Initialize(AvcolCoCurricularWebsiteContext context)
         {
-            using (var context = new AvcolCoCurricularWebsiteContext(
-                serviceProvider.GetRequiredService<
-                    DbContextOptions<AvcolCoCurricularWebsiteContext>>()))
-            {
-                // Look for any movies.
-                if (context.Staff.Any())
-                {
-                    return;   // DB has been seeded
-                }
+            context.Database.EnsureCreated();
 
-                context.Staff.AddRange(
+            // Look for any staff
+            if (context.Staff.Any())
+            {
+                return;   // DB has been seeded
+            }
+
+            var staff = new Staff[]
+            {
                 new Staff { FirstName = "Lindy", LastName = "Watkinson", TeacherCode = "LWA", HireDate = DateTime.Parse("2019-12-01") },
                 new Staff { FirstName = "Jamie", LastName = "Smith", TeacherCode = "JSM", HireDate = DateTime.Parse("2017-09-01") },
                 new Staff { FirstName = "Grace", LastName = "Williams", TeacherCode = "GWI", HireDate = DateTime.Parse("2017-09-01") },
@@ -55,9 +53,10 @@ namespace AvcolCoCurricularWebsite.Models
                 new Staff { FirstName = "Meg", LastName = "Goldthrope", TeacherCode = "MGO", HireDate = DateTime.Parse("2013-09-06") },
                 new Staff { FirstName = "Neil", LastName = "Bartlett", TeacherCode = "NBA", HireDate = DateTime.Parse("2017-07-01") },
                 new Staff { FirstName = "Shane", LastName = "Laurence", TeacherCode = "SLA", HireDate = DateTime.Parse("2020-09-01") }
-                );
-                context.SaveChanges();
-            }
+            };
+
+            context.Staff.AddRange(staff);
+            context.SaveChanges();
         }
     }
 }

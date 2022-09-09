@@ -23,5 +23,18 @@ namespace AvcolCoCurricularWebsite.Data
         public DbSet<AvcolCoCurricularWebsite.Models.Sport> Sport { get; set; }
         public DbSet<AvcolCoCurricularWebsite.Models.Staff> Staff { get; set; }
         public DbSet<AvcolCoCurricularWebsite.Models.SubjectTutorial> SubjectTutorial { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Activity>().ToTable("Activity");
+            modelBuilder.Entity<Club>().ToTable("Club");
+            modelBuilder.Entity<Music>().ToTable("Music");
+            modelBuilder.Entity<PerformingArt>().ToTable("PerformingArt");
+            modelBuilder.Entity<PersonalInformation>().ToTable("PersonalInformation");
+            modelBuilder.Entity<ScholarshipTutorial>().ToTable("ScholarshipTutorial");
+            modelBuilder.Entity<Sport>().ToTable("Sport");
+            modelBuilder.Entity<Staff>().ToTable("Staff");
+            modelBuilder.Entity<SubjectTutorial>().ToTable("SubjectTutorial");
+        }
     }
 }

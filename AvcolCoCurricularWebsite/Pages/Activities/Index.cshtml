@@ -22,13 +22,17 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Activity[0].ActivityName)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.NameSort">
+                    @Html.DisplayNameFor(model => model.Activity[0].ActivityName)
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Activity[0].SignUpForm)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Activity[0].Staff)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.NameSort">
+                    @Html.DisplayNameFor(model => model.Activity[0].Staff)
+                </a>
             </th>
             <th></th>
         </tr>
