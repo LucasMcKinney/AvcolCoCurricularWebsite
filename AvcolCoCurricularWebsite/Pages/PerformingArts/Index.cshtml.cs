@@ -28,7 +28,7 @@ namespace AvcolCoCurricularWebsite.Pages.PerformingArts
         public async Task OnGetAsync(string sortOrder, string searchString)
         {
             // using System;
-            ActivitySort = string.IsNullOrEmpty(sortOrder) ? "activity_desc" : "";
+            ActivitySort = sortOrder == "Activity" ? "activity_desc" : "Activity";
             CurrentFilter = searchString;
 
             IQueryable<PerformingArt> performingartsIQ = from p in _context.PerformingArt

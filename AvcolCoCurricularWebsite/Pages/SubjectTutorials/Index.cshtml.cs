@@ -19,24 +19,37 @@ namespace AvcolCoCurricularWebsite.Pages.SubjectTutorials
             _context = context;
         }
 
+        public string ActivitySort { get; set; }
+        public string CurrentFilter { get; set; }
+        public string CurrentSort { get; set; }
+
         public IList<SubjectTutorial> SubjectTutorial { get;set; }
-        [BindProperty(SupportsGet = true)]
-        public string SearchString { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string sortOrder, string searchString)
         {
-            SubjectTutorial = await _context.SubjectTutorial
-                .Include(s => s.Activity).ToListAsync();
+            // using System;
+            ActivitySort = sortOrder == "Activity" ? "activity_desc" : "Activity";
+            CurrentFilter = searchString;
 
-            var subjecttutorials = from s in _context.SubjectTutorial
-                                   select s;
+            IQueryable<SubjectTutorial> subjecttutorialsIQ = from s in _context.SubjectTutorial
+                                                             select s;
 
-            if (!string.IsNullOrEmpty(SearchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
-                subjecttutorials = subjecttutorials.Where(s => s.Activity.ActivityName.Contains(SearchString));
+                subjecttutorialsIQ = subjecttutorialsIQ.Where(s => s.Activity.ActivityName.ToUpper().Contains(searchString.ToUpper()));
             }
 
-            SubjectTutorial = await subjecttutorials.ToListAsync();
+            switch (sortOrder)
+            {
+                case "activity_desc":
+                    subjecttutorialsIQ = subjecttutorialsIQ.OrderByDescending(s => s.Activity.ActivityName);
+                    break;
+                default:
+                    subjecttutorialsIQ = subjecttutorialsIQ.OrderBy(s => s.Activity.ActivityName);
+                    break;
+            }
+
+            SubjectTutorial = await subjecttutorialsIQ.Include(s => s.Activity).AsNoTracking().ToListAsync();
         }
     }
 }

@@ -29,8 +29,8 @@ namespace AvcolCoCurricularWebsite.Pages.Activities
         public async Task OnGetAsync(string sortOrder, string searchString)
         {
             // using System;
-            ActivityNameSort = string.IsNullOrEmpty(sortOrder) ? "activityname_desc" : "";
-            StaffSort = string.IsNullOrEmpty(sortOrder) ? "staff_desc" : "";
+            ActivityNameSort = sortOrder == "ActivityName" ? "activityname_desc" : "ActivityName";
+            StaffSort = sortOrder == "Staff" ? "staff_desc" : "Staff";
             CurrentFilter = searchString;
 
             IQueryable<Activity> activitiesIQ = from a in _context.Activity

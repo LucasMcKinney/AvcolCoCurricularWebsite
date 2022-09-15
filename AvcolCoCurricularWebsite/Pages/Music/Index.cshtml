@@ -46,7 +46,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Music) {
+        @foreach (var item in Model.Music) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Activity.ActivityName)
@@ -69,6 +69,6 @@
                 <a asp-page="./Delete" asp-route-id="@item.MusicID">Delete</a>
             </td>
         </tr>
-}
+        }
     </tbody>
 </table>

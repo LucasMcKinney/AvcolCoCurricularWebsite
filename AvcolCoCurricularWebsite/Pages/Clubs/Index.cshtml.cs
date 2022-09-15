@@ -28,7 +28,7 @@ namespace AvcolCoCurricularWebsite.Pages.Clubs
         public async Task OnGetAsync(string sortOrder, string searchString)
         {
             // using System;
-            ActivitySort = string.IsNullOrEmpty(sortOrder) ? "activity_desc" : "";
+            ActivitySort = sortOrder == "Activity" ? "activity_desc" : "Activity";
             CurrentFilter = searchString;
 
             IQueryable<Club> clubsIQ = from c in _context.Club

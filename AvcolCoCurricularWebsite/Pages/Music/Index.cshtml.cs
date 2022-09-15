@@ -28,7 +28,7 @@ namespace AvcolCoCurricularWebsite.Pages.Music
         public async Task OnGetAsync(string sortOrder, string searchString)
         {
             // using System;
-            ActivitySort = string.IsNullOrEmpty(sortOrder) ? "activity_desc" : "";
+            ActivitySort = sortOrder == "Activity" ? "activity_desc" : "Activity";
             CurrentFilter = searchString;
 
             IQueryable<Models.Music> musicIQ = from m in _context.Music

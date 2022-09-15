@@ -30,8 +30,8 @@ namespace AvcolCoCurricularWebsite.Pages.Staff
         public async Task OnGetAsync(string sortOrder, string searchString)
         {
             // using System;
-            LastNameSort = string.IsNullOrEmpty(sortOrder) ? "lastname_desc" : "";
-            FirstNameSort = string.IsNullOrEmpty(sortOrder) ? "firstname_desc" : "";
+            LastNameSort = sortOrder == "LastName" ? "lastname_desc" : "LastName";
+            FirstNameSort = sortOrder == "FirstName" ? "firstname_desc" : "FirstName";
             HireDateSort = sortOrder == "HireDate" ? "hiredate_desc" : "HireDate";
             CurrentFilter = searchString;
 
@@ -43,19 +43,29 @@ namespace AvcolCoCurricularWebsite.Pages.Staff
                 staffIQ = staffIQ.Where(s => s.TeacherCode.ToUpper().Contains(searchString.ToUpper()));
             }
 
-            // CONTINUE HERE
-
             switch (sortOrder)
             {
                 case "lastname_desc":
                     staffIQ = staffIQ.OrderByDescending(s => s.LastName);
                     break;
+                case "FirstName":
+                    staffIQ = staffIQ.OrderBy(s => s.FirstName);
+                    break;
+                case "firstname_desc":
+                    staffIQ = staffIQ.OrderByDescending(s => s.FirstName);
+                    break;
+                case "HireDate":
+                    staffIQ = staffIQ.OrderBy(s => s.HireDate);
+                    break;
+                case "hiredate_desc":
+                    staffIQ = staffIQ.OrderByDescending(s => s.HireDate);
+                    break;
                 default:
-                    staffIQ = staffIQ.OrderBy(s => s.Activity);
+                    staffIQ = staffIQ.OrderBy(s => s.LastName);
                     break;
             }
 
-            Staff = await staffIQ.Include(c => c.Activity).AsNoTracking().ToListAsync();
+            Staff = await staffIQ.AsNoTracking().ToListAsync();
         }
     }
 }

@@ -28,7 +28,7 @@ namespace AvcolCoCurricularWebsite.Pages.PersonalInformation
         public async Task OnGetAsync(string sortOrder, string searchString)
         {
             // using System;
-            StaffSort = string.IsNullOrEmpty(sortOrder) ? "staff_desc" : "";
+            StaffSort = sortOrder == "Staff" ? "staff_desc" : "Staff";
             CurrentFilter = searchString;
 
             IQueryable<Models.PersonalInformation> personalinformationIQ = from p in _context.PersonalInformation
