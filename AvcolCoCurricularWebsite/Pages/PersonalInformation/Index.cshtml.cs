@@ -19,24 +19,37 @@ namespace AvcolCoCurricularWebsite.Pages.PersonalInformation
             _context = context;
         }
 
+        public string StaffSort { get; set; }
+        public string CurrentFilter { get; set; }
+        public string CurrentSort { get; set; }
+
         public IList<Models.PersonalInformation> PersonalInformation { get;set; }
-        [BindProperty(SupportsGet = true)]
-        public string SearchString { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string sortOrder, string searchString)
         {
-            PersonalInformation = await _context.PersonalInformation
-                .Include(p => p.Staff).ToListAsync();
+            // using System;
+            StaffSort = string.IsNullOrEmpty(sortOrder) ? "staff_desc" : "";
+            CurrentFilter = searchString;
 
-            var personalinformation = from p in _context.PersonalInformation
-                                      select p;
+            IQueryable<Models.PersonalInformation> personalinformationIQ = from p in _context.PersonalInformation
+                                                                           select p;
 
-            if (!string.IsNullOrEmpty(SearchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
-                personalinformation = personalinformation.Where(s => s.Staff.FullName.Contains(SearchString));
+                personalinformationIQ = personalinformationIQ.Where(s => s.Staff.LastName.ToUpper().Contains(searchString.ToUpper()));
             }
 
-            PersonalInformation = await personalinformation.ToListAsync();
+            switch (sortOrder)
+            {
+                case "staff_desc":
+                    personalinformationIQ = personalinformationIQ.OrderByDescending(s => s.Staff.LastName);
+                    break;
+                default:
+                    personalinformationIQ = personalinformationIQ.OrderBy(s => s.Staff.LastName);
+                    break;
+            }
+
+            PersonalInformation = await personalinformationIQ.Include(p => p.Staff).AsNoTracking().ToListAsync();
         }
     }
 }

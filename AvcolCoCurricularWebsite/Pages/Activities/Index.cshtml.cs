@@ -19,20 +19,18 @@ namespace AvcolCoCurricularWebsite.Pages.Activities
             _context = context;
         }
 
-        public string NameSort { get; set; }
-        public string DateSort { get; set; }
+        public string ActivityNameSort { get; set; }
+        public string StaffSort { get; set; }
         public string CurrentFilter { get; set; }
         public string CurrentSort { get; set; }
 
         public IList<Activity> Activity { get;set; }
-        [BindProperty(SupportsGet = true)]
         
         public async Task OnGetAsync(string sortOrder, string searchString)
         {
             // using System;
-            NameSort = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            FNameSort = sortOrder == "FName" ? "FName_desc" : "FName";
-            DateSort = sortOrder == "Date" ? "date_desc" : "Date";
+            ActivityNameSort = string.IsNullOrEmpty(sortOrder) ? "activityname_desc" : "";
+            StaffSort = string.IsNullOrEmpty(sortOrder) ? "staff_desc" : "";
             CurrentFilter = searchString;
 
             IQueryable<Activity> activitiesIQ = from a in _context.Activity
@@ -40,22 +38,26 @@ namespace AvcolCoCurricularWebsite.Pages.Activities
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                activitiesIQ = activitiesIQ.Where(s => s.ActivityName.Contains(searchString));
+                activitiesIQ = activitiesIQ.Where(s => s.ActivityName.ToUpper().Contains(searchString.ToUpper()));
             }
 
             switch (sortOrder)
             {
-                case "name_desc":
+                case "activityname_desc":
                     activitiesIQ = activitiesIQ.OrderByDescending(s => s.ActivityName);
+                    break;
+                case "Staff":
+                    activitiesIQ = activitiesIQ.OrderBy(s => s.Staff.LastName);
+                    break;
+                case "staff_desc":
+                    activitiesIQ = activitiesIQ.OrderByDescending(s => s.Staff.LastName);
                     break;
                 default:
                     activitiesIQ = activitiesIQ.OrderBy(s => s.ActivityName);
                     break;
             }
-            
-            //REWRITE IQ SWITCH
 
-            Activity = await activitiesIQ.AsNoTracking().ToListAsync();
+            Activity = await activitiesIQ.Include(a => a.Staff).AsNoTracking().ToListAsync();
         }
     }
 }

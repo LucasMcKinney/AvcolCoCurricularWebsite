@@ -11,27 +11,37 @@
     <a asp-page="Create">Create New</a>
 </p>
 
-<form>
-    <p>
-        Teacher Code: <input type="text" asp-for="SearchString" />
-        <input type="submit" value="Filter" />
-    </p>
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by Teacher Code:
+            <input type="text" name="searchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
 </form>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Staff[0].LastName)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.LastNameSort">
+                    @Html.DisplayNameFor(model => model.Staff[0].LastName)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Staff[0].FirstName)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.FirstNameSort">
+                    @Html.DisplayNameFor(model => model.Staff[0].FirstName)
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Staff[0].TeacherCode)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Staff[0].HireDate)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.HireDateSort">
+                    @Html.DisplayNameFor(model => model.Staff[0].HireDate)
+                </a>
             </th>
             <th></th>
         </tr>

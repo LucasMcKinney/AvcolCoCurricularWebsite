@@ -19,24 +19,37 @@ namespace AvcolCoCurricularWebsite.Pages.ScholarshipTutorials
             _context = context;
         }
 
+        public string ActivitySort { get; set; }
+        public string CurrentFilter { get; set; }
+        public string CurrentSort { get; set; }
+
         public IList<ScholarshipTutorial> ScholarshipTutorial { get;set; }
-        [BindProperty(SupportsGet = true)]
-        public string SearchString { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string sortOrder, string searchString)
         {
-            ScholarshipTutorial = await _context.ScholarshipTutorial
-                .Include(s => s.Activity).ToListAsync();
+            // using System;
+            ActivitySort = string.IsNullOrEmpty(sortOrder) ? "activity_desc" : "";
+            CurrentFilter = searchString;
 
-            var scholarshiptutorials = from s in _context.ScholarshipTutorial
-                                       select s;
+            IQueryable<ScholarshipTutorial> scholarshiptutorialsIQ = from s in _context.ScholarshipTutorial
+                                                      select s;
 
-            if (!string.IsNullOrEmpty(SearchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
-                scholarshiptutorials = scholarshiptutorials.Where(s => s.Activity.ActivityName.Contains(SearchString));
+                scholarshiptutorialsIQ = scholarshiptutorialsIQ.Where(s => s.Activity.ActivityName.ToUpper().Contains(searchString.ToUpper()));
             }
 
-            ScholarshipTutorial = await scholarshiptutorials.ToListAsync();
+            switch (sortOrder)
+            {
+                case "activity_desc":
+                    scholarshiptutorialsIQ = scholarshiptutorialsIQ.OrderByDescending(s => s.Activity.ActivityName);
+                    break;
+                default:
+                    scholarshiptutorialsIQ = scholarshiptutorialsIQ.OrderBy(s => s.Activity.ActivityName);
+                    break;
+            }
+
+            ScholarshipTutorial = await scholarshiptutorialsIQ.Include(s => s.Activity).AsNoTracking().ToListAsync();
         }
     }
 }

@@ -11,18 +11,24 @@
     <a asp-page="Create">Create New</a>
 </p>
 
-<form>
-    <p>
-        Staff: <input type="text" asp-for="SearchString" />
-        <input type="submit" value="Filter" />
-    </p>
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by Staff Last Name:
+            <input type="text" name="searchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
 </form>
 
-<table class="table">
+<table class="table" style="column-width:auto">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.PersonalInformation[0].Staff)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.StaffSort">
+                    @Html.DisplayNameFor(model => model.PersonalInformation[0].Staff)
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.PersonalInformation[0].DateOfBirth)
@@ -46,35 +52,36 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.PersonalInformation) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Staff.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfBirth)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhoneNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ECPhoneNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ECRelationship)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmailAddress)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.StaffID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.StaffID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.StaffID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.PersonalInformation)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Staff.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfBirth)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ECPhoneNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ECRelationship)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EmailAddress)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.StaffID">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.StaffID">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.StaffID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

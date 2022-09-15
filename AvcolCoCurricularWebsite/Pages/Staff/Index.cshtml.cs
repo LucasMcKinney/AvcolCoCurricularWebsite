@@ -19,23 +19,43 @@ namespace AvcolCoCurricularWebsite.Pages.Staff
             _context = context;
         }
 
+        public string LastNameSort { get; set; }
+        public string FirstNameSort { get; set; }
+        public string HireDateSort { get; set; }
+        public string CurrentFilter { get; set; }
+        public string CurrentSort { get; set; }
+
         public IList<Models.Staff> Staff { get;set; }
-        [BindProperty(SupportsGet = true)]
-        public string SearchString { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string sortOrder, string searchString)
         {
-            Staff = await _context.Staff.ToListAsync();
+            // using System;
+            LastNameSort = string.IsNullOrEmpty(sortOrder) ? "lastname_desc" : "";
+            FirstNameSort = string.IsNullOrEmpty(sortOrder) ? "firstname_desc" : "";
+            HireDateSort = sortOrder == "HireDate" ? "hiredate_desc" : "HireDate";
+            CurrentFilter = searchString;
 
-            var staff = from s in _context.Staff
-                        select s;
+            IQueryable<Models.Staff> staffIQ = from s in _context.Staff
+                                               select s;
 
-            if (!string.IsNullOrEmpty(SearchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
-                staff = staff.Where(s => s.TeacherCode.Contains(SearchString));
+                staffIQ = staffIQ.Where(s => s.TeacherCode.ToUpper().Contains(searchString.ToUpper()));
             }
 
-            Staff = await staff.ToListAsync();
+            // CONTINUE HERE
+
+            switch (sortOrder)
+            {
+                case "lastname_desc":
+                    staffIQ = staffIQ.OrderByDescending(s => s.LastName);
+                    break;
+                default:
+                    staffIQ = staffIQ.OrderBy(s => s.Activity);
+                    break;
+            }
+
+            Staff = await staffIQ.Include(c => c.Activity).AsNoTracking().ToListAsync();
         }
     }
 }

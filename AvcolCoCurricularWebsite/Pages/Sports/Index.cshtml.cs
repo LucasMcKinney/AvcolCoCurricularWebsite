@@ -19,24 +19,37 @@ namespace AvcolCoCurricularWebsite.Pages.Sports
             _context = context;
         }
 
+        public string ActivitySort { get; set; }
+        public string CurrentFilter { get; set; }
+        public string CurrentSort { get; set; }
+
         public IList<Sport> Sport { get;set; }
-        [BindProperty(SupportsGet = true)]
-        public string SearchString { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string sortOrder, string searchString)
         {
-            Sport = await _context.Sport
-                .Include(s => s.Activity).ToListAsync();
+            // using System;
+            ActivitySort = string.IsNullOrEmpty(sortOrder) ? "activity_desc" : "";
+            CurrentFilter = searchString;
 
-            var sports = from s in _context.Sport
-                         select s;
+            IQueryable<Sport> sportsIQ = from s in _context.Sport
+                                         select s;
 
-            if (!string.IsNullOrEmpty(SearchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
-                sports = sports.Where(s => s.Activity.ActivityName.Contains(SearchString));
+                sportsIQ = sportsIQ.Where(s => s.Activity.ActivityName.ToUpper().Contains(searchString.ToUpper()));
             }
 
-            Sport = await sports.ToListAsync();
+            switch (sortOrder)
+            {
+                case "activity_desc":
+                    sportsIQ = sportsIQ.OrderByDescending(s => s.Activity.ActivityName);
+                    break;
+                default:
+                    sportsIQ = sportsIQ.OrderBy(s => s.Activity.ActivityName);
+                    break;
+            }
+
+            Sport = await sportsIQ.Include(s => s.Activity).AsNoTracking().ToListAsync();
         }
     }
 }

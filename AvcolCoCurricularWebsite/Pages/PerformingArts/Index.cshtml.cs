@@ -19,24 +19,37 @@ namespace AvcolCoCurricularWebsite.Pages.PerformingArts
             _context = context;
         }
 
+        public string ActivitySort { get; set; }
+        public string CurrentFilter { get; set; }
+        public string CurrentSort { get; set; }
+
         public IList<PerformingArt> PerformingArt { get;set; }
-        [BindProperty(SupportsGet = true)]
-        public string SearchString { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string sortOrder, string searchString)
         {
-            PerformingArt = await _context.PerformingArt
-                .Include(p => p.Activity).ToListAsync();
+            // using System;
+            ActivitySort = string.IsNullOrEmpty(sortOrder) ? "activity_desc" : "";
+            CurrentFilter = searchString;
 
-            var performingarts = from p in _context.PerformingArt
-                                 select p;
+            IQueryable<PerformingArt> performingartsIQ = from p in _context.PerformingArt
+                                                         select p;
 
-            if (!string.IsNullOrEmpty(SearchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
-                performingarts = performingarts.Where(s => s.Activity.ActivityName.Contains(SearchString));
+                performingartsIQ = performingartsIQ.Where(s => s.Activity.ActivityName.ToUpper().Contains(searchString.ToUpper()));
             }
 
-            PerformingArt = await performingarts.ToListAsync();
+            switch (sortOrder)
+            {
+                case "activity_desc":
+                    performingartsIQ = performingartsIQ.OrderByDescending(s => s.Activity.ActivityName);
+                    break;
+                default:
+                    performingartsIQ = performingartsIQ.OrderBy(s => s.Activity.ActivityName);
+                    break;
+            }
+
+            PerformingArt = await performingartsIQ.Include(p => p.Activity).AsNoTracking().ToListAsync();
         }
     }
 }

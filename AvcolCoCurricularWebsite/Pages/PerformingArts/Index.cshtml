@@ -11,18 +11,24 @@
     <a asp-page="Create">Create New</a>
 </p>
 
-<form>
-    <p>
-        Activity: <input type="text" asp-for="SearchString" />
-        <input type="submit" value="Filter" />
-    </p>
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by Activity:
+            <input type="text" name="searchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
 </form>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.PerformingArt[0].Activity)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.ActivitySort">
+                    @Html.DisplayNameFor(model => model.PerformingArt[0].Activity)
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.PerformingArt[0].RoomNumber)
@@ -40,7 +46,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.PerformingArt) {
+        @foreach (var item in Model.PerformingArt) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Activity.ActivityName)
@@ -63,6 +69,6 @@
                 <a asp-page="./Delete" asp-route-id="@item.PerformingArtID">Delete</a>
             </td>
         </tr>
-}
+        }
     </tbody>
 </table>

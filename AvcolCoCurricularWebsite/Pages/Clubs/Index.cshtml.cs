@@ -19,24 +19,37 @@ namespace AvcolCoCurricularWebsite.Pages.Clubs
             _context = context;
         }
 
+        public string ActivitySort { get; set; }
+        public string CurrentFilter { get; set; }
+        public string CurrentSort { get; set; }
+
         public IList<Club> Club { get;set; }
-        [BindProperty(SupportsGet = true)]
-        public string SearchString { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string sortOrder, string searchString)
         {
-            Club = await _context.Club
-                .Include(c => c.Activity).ToListAsync();
+            // using System;
+            ActivitySort = string.IsNullOrEmpty(sortOrder) ? "activity_desc" : "";
+            CurrentFilter = searchString;
 
-            var clubs = from c in _context.Club
-                        select c;
+            IQueryable<Club> clubsIQ = from c in _context.Club
+                                       select c;
 
-            if (!string.IsNullOrEmpty(SearchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
-                clubs = clubs.Where(s => s.Activity.ActivityName.Contains(SearchString));
+                clubsIQ = clubsIQ.Where(s => s.Activity.ActivityName.ToUpper().Contains(searchString.ToUpper()));
             }
 
-            Club = await clubs.ToListAsync();
+            switch (sortOrder)
+            {
+                case "activity_desc":
+                    clubsIQ = clubsIQ.OrderByDescending(s => s.Activity.ActivityName);
+                    break;
+                default:
+                    clubsIQ = clubsIQ.OrderBy(s => s.Activity.ActivityName);
+                    break;
+            }
+
+            Club = await clubsIQ.Include(c => c.Activity).AsNoTracking().ToListAsync();
         }
     }
 }

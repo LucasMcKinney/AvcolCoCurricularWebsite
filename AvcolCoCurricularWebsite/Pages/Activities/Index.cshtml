@@ -11,18 +11,22 @@
     <a asp-page="Create">Create New</a>
 </p>
 
-<form>
-    <p>
-        Activity Name: <input type="text" asp-for="SearchString" />
-        <input type="submit" value="Filter" />
-    </p>
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by Activity Name:
+            <input type="text" name="searchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
 </form>
 
-<table class="table">
+<table class="table" style="column-width:auto">
     <thead>
         <tr>
             <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.NameSort">
+                <a asp-page="./Index" asp-route-sortOrder="@Model.ActivityNameSort">
                     @Html.DisplayNameFor(model => model.Activity[0].ActivityName)
                 </a>
             </th>
@@ -30,7 +34,7 @@
                 @Html.DisplayNameFor(model => model.Activity[0].SignUpForm)
             </th>
             <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.NameSort">
+                <a asp-page="./Index" asp-route-sortOrder="@Model.StaffSort">
                     @Html.DisplayNameFor(model => model.Activity[0].Staff)
                 </a>
             </th>
@@ -38,7 +42,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Activity) {
+        @foreach (var item in Model.Activity) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.ActivityName)
@@ -55,6 +59,6 @@
                 <a asp-page="./Delete" asp-route-id="@item.ActivityID">Delete</a>
             </td>
         </tr>
-}
+        }
     </tbody>
 </table>

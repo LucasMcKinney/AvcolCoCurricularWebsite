@@ -19,24 +19,37 @@ namespace AvcolCoCurricularWebsite.Pages.Music
             _context = context;
         }
 
-        public IList<Models.Music> Music { get;set; }
-        [BindProperty(SupportsGet = true)]
-        public string SearchString { get; set; }
+        public string ActivitySort { get; set; }
+        public string CurrentFilter { get; set; }
+        public string CurrentSort { get; set; }
 
-        public async Task OnGetAsync()
+        public IList<Models.Music> Music { get; set; }
+
+        public async Task OnGetAsync(string sortOrder, string searchString)
         {
-            Music = await _context.Music
-                .Include(m => m.Activity).ToListAsync();
+            // using System;
+            ActivitySort = string.IsNullOrEmpty(sortOrder) ? "activity_desc" : "";
+            CurrentFilter = searchString;
 
-            var music = from m in _context.Music
-                        select m;
+            IQueryable<Models.Music> musicIQ = from m in _context.Music
+                                               select m;
 
-            if (!string.IsNullOrEmpty(SearchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
-                music = music.Where(s => s.Activity.ActivityName.Contains(SearchString));
+                musicIQ = musicIQ.Where(s => s.Activity.ActivityName.ToUpper().Contains(searchString.ToUpper()));
             }
 
-            Music = await music.ToListAsync();
+            switch (sortOrder)
+            {
+                case "activity_desc":
+                    musicIQ = musicIQ.OrderByDescending(s => s.Activity.ActivityName);
+                    break;
+                default:
+                    musicIQ = musicIQ.OrderBy(s => s.Activity.ActivityName);
+                    break;
+            }
+
+            Music = await musicIQ.Include(m => m.Activity).AsNoTracking().ToListAsync();
         }
     }
 }
