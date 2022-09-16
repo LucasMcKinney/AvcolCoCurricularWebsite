@@ -26,49 +26,72 @@
     <thead>
         <tr>
             <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.ActivitySort">
-                    @Html.DisplayNameFor(model => model.PerformingArt[0].Activity)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.ActivitySort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
+                    @Html.DisplayNameFor(model => model.PerformingArts[0].Activity)
                 </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PerformingArt[0].RoomNumber)
+                @Html.DisplayNameFor(model => model.PerformingArts[0].RoomNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PerformingArt[0].Day)
+                @Html.DisplayNameFor(model => model.PerformingArts[0].Day)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PerformingArt[0].StartTime)
+                @Html.DisplayNameFor(model => model.PerformingArts[0].StartTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PerformingArt[0].EndTime)
+                @Html.DisplayNameFor(model => model.PerformingArts[0].EndTime)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.PerformingArt) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Activity.ActivityName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RoomNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Day)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndTime)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.PerformingArtID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.PerformingArtID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.PerformingArtID">Delete</a>
-            </td>
-        </tr>
+        @foreach (var item in Model.PerformingArts)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Activity.ActivityName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoomNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Day)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndTime)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.PerformingArtID">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.PerformingArtID">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.PerformingArtID">Delete</a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.PerformingArts.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.PerformingArts.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.PerformingArts.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.PerformingArts.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>
