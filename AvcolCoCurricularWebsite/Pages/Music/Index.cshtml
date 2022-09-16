@@ -26,7 +26,8 @@
     <thead>
         <tr>
             <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.ActivitySort">
+                <a asp-page="./Index" asp-route-sortOrder="@Model.ActivitySort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
                     @Html.DisplayNameFor(model => model.Music[0].Activity)
                 </a>
             </th>
@@ -46,29 +47,51 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Music) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Activity.ActivityName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RoomNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Day)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndTime)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.MusicID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.MusicID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.MusicID">Delete</a>
-            </td>
-        </tr>
+        @foreach (var item in Model.Music)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Activity.ActivityName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoomNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Day)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndTime)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.MusicID">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.MusicID">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.MusicID">Delete</a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.Music.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Music.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Music.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Music.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>
