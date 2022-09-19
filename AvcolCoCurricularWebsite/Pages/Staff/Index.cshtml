@@ -26,12 +26,14 @@
     <thead>
         <tr>
             <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.LastNameSort">
+                <a asp-page="./Index" asp-route-sortOrder="@Model.LastNameSort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
                     @Html.DisplayNameFor(model => model.Staff[0].LastName)
                 </a>
             </th>
             <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.FirstNameSort">
+                <a asp-page="./Index" asp-route-sortOrder="@Model.FirstNameSort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
                     @Html.DisplayNameFor(model => model.Staff[0].FirstName)
                 </a>
             </th>
@@ -39,7 +41,8 @@
                 @Html.DisplayNameFor(model => model.Staff[0].TeacherCode)
             </th>
             <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.HireDateSort">
+                <a asp-page="./Index" asp-route-sortOrder="@Model.HireDateSort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
                     @Html.DisplayNameFor(model => model.Staff[0].HireDate)
                 </a>
             </th>
@@ -47,26 +50,48 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Staff) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TeacherCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HireDate)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.StaffID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.StaffID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.StaffID">Delete</a>
-            </td>
-        </tr>
+        @foreach (var item in Model.Staff)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeacherCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HireDate)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.StaffID">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.StaffID">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.StaffID">Delete</a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.Staff.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Staff.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Staff.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Staff.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

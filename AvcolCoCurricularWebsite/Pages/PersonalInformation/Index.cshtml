@@ -26,7 +26,8 @@
     <thead>
         <tr>
             <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.StaffSort">
+                <a asp-page="./Index" asp-route-sortOrder="@Model.StaffSort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
                     @Html.DisplayNameFor(model => model.PersonalInformation[0].Staff)
                 </a>
             </th>
@@ -85,3 +86,24 @@
         }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.PersonalInformation.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.PersonalInformation.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.PersonalInformation.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.PersonalInformation.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

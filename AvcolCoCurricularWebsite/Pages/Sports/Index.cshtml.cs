@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using AvcolCoCurricularWebsite.Data;
 using AvcolCoCurricularWebsite.Models;
 
@@ -13,22 +14,35 @@ namespace AvcolCoCurricularWebsite.Pages.Sports
     public class IndexModel : PageModel
     {
         private readonly AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext _context;
+        private readonly IConfiguration Configuration;
 
-        public IndexModel(AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext context)
+        public IndexModel(AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext context, IConfiguration configuration)
         {
             _context = context;
+            Configuration = configuration;
         }
 
         public string ActivitySort { get; set; }
         public string CurrentFilter { get; set; }
         public string CurrentSort { get; set; }
 
-        public IList<Sport> Sport { get;set; }
+        public PaginatedList<Sport> Sports { get; set; }
 
-        public async Task OnGetAsync(string sortOrder, string searchString)
+        public async Task OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
         {
             // using System;
+            CurrentSort = sortOrder;
             ActivitySort = sortOrder == "Activity" ? "activity_desc" : "Activity";
+
+            if (searchString != null)
+            {
+                pageIndex = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
             CurrentFilter = searchString;
 
             IQueryable<Sport> sportsIQ = from s in _context.Sport
@@ -49,7 +63,8 @@ namespace AvcolCoCurricularWebsite.Pages.Sports
                     break;
             }
 
-            Sport = await sportsIQ.Include(s => s.Activity).AsNoTracking().ToListAsync();
+            var pageSize = Configuration.GetValue("PageSize", 10);
+            Sports = await PaginatedList<Sport>.CreateAsync(sportsIQ.Include(s => s.Activity).AsNoTracking(), pageIndex ?? 1, pageSize);
         }
     }
 }
