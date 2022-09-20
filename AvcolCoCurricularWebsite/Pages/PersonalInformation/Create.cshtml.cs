@@ -32,6 +32,9 @@ namespace AvcolCoCurricularWebsite.Pages.PersonalInformation
         // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            Models.Staff staff = (from s in _context.Staff where s.StaffID == PersonalInformation.StaffID select s).FirstOrDefault();
+            PersonalInformation.EmailAddress = staff.TeacherCode + "@avcol.school.nz";
+
             if (!ModelState.IsValid)
             {
                 return Page();
