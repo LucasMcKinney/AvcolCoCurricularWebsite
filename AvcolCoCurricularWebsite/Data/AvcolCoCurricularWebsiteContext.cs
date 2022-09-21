@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using AvcolCoCurricularWebsite.Models;
 
 namespace AvcolCoCurricularWebsite.Data
 {
-    public class AvcolCoCurricularWebsiteContext : DbContext
+    public class AvcolCoCurricularWebsiteContext : IdentityDbContext
     {
         public AvcolCoCurricularWebsiteContext (DbContextOptions<AvcolCoCurricularWebsiteContext> options)
             : base(options)
@@ -26,6 +27,7 @@ namespace AvcolCoCurricularWebsite.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Activity>().ToTable("Activity");
             modelBuilder.Entity<Club>().ToTable("Club");
             modelBuilder.Entity<Music>().ToTable("Music");
