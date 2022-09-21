@@ -54,7 +54,6 @@
             </div>
             <div class="form-group">
                 <label asp-for="PersonalInformation.CitizenStatus" class="control-label"></label>
-                <input asp-for="PersonalInformation.CitizenStatus" class="form-control" />
                 <select select asp-for="PersonalInformation.CitizenStatus" class="form-control">
                     <option value="">-- Select Citizen Status --</option>
                     <option value="New Zealand Citizen">New Zealand Citizen</option>
@@ -83,6 +82,7 @@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
+            @Html.ValidationSummary(false)
         </form>
     </div>
 </div>

@@ -41,22 +41,35 @@
             </div>
             <div class="form-group">
                 <label asp-for="PersonalInformation.CitizenStatus" class="control-label"></label>
-                <input asp-for="PersonalInformation.CitizenStatus" class="form-control" />
+                <select select asp-for="PersonalInformation.CitizenStatus" class="form-control">
+                    <option value="">-- Select Citizen Status --</option>
+                    <option value="New Zealand Citizen">New Zealand Citizen</option>
+                    <option value="Australian Citizen">Australian Citizen</option>
+                    <option value="Other">Other</option>
+                </select>
                 <span asp-validation-for="PersonalInformation.CitizenStatus" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PersonalInformation.Ethnicity" class="control-label"></label>
-                <input asp-for="PersonalInformation.Ethnicity" class="form-control" />
+                <select select asp-for="PersonalInformation.Ethnicity" class="form-control">
+                    <option value="">-- Select Ethnicity --</option>
+                    <option value="New Zealand European">New Zealand European</option>
+                    <option value="Maori">Maori</option>
+                    <option value="Pacifica">Pacifica</option>
+                    <option value="Asian">Asian</option>
+                    <option value="Other">Other</option>
+                </select>
                 <span asp-validation-for="PersonalInformation.Ethnicity" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PersonalInformation.EmailAddress" class="control-label"></label>
-                <input asp-for="PersonalInformation.EmailAddress" class="form-control" />
+                <input asp-for="PersonalInformation.EmailAddress" readonly class="form-control" />
                 <span asp-validation-for="PersonalInformation.EmailAddress" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
+            @Html.ValidationSummary(false)
         </form>
     </div>
 </div>
