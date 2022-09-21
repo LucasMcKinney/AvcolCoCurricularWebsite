@@ -28,8 +28,6 @@ namespace AvcolCoCurricularWebsite.Pages.SubjectTutorials
         [BindProperty]
         public SubjectTutorial SubjectTutorial { get; set; }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)

@@ -39,9 +39,6 @@ namespace AvcolCoCurricularWebsite.Pages.Staff
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
-
         private readonly DateTime BeginningHireDate = new DateTime(1945, 01, 01); // set BeginningHireDate to when avondale college started hiring staff
 
         public async Task<IActionResult> OnPostAsync()
