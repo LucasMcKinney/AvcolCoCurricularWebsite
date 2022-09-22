@@ -10,7 +10,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AvcolCoCurricularWebsite.Data;
-using Microsoft.AspNetCore.Identity;
 
 namespace AvcolCoCurricularWebsite
 {
@@ -27,10 +26,6 @@ namespace AvcolCoCurricularWebsite
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddAuthorization();
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<AvcolCoCurricularWebsiteContext>()
-                .AddDefaultTokenProviders();
 
             services.AddDbContext<AvcolCoCurricularWebsiteContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("AvcolCoCurricularWebsiteContext")));
@@ -55,7 +50,6 @@ namespace AvcolCoCurricularWebsite
 
             app.UseRouting();
 
-            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
