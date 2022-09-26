@@ -27,6 +27,10 @@ namespace AvcolCoCurricularWebsite.Pages.PersonalInformation
 
         [BindProperty]
         public Models.PersonalInformation PersonalInformation { get; set; }
+        public string DateOfBirthErrorMessage { get; set; }
+        public string PhoneNumberErrorMessage { get; set; }
+        public string ECPhoneNumberErrorMessage { get; set; }
+        public string StaffErrorMessage { get; set; }
 
         private readonly DateTime EarliestDate = new DateTime(1922, 01, 01); // the earliest date of birth of a staff member since there are realistically no teachers aged over 100
         private readonly DateTime LatestDate = new DateTime(2001, 01, 01); // the latest date of birth of a staff member since teachers complete their required 4 years of university by at least the age of 21
@@ -44,19 +48,19 @@ namespace AvcolCoCurricularWebsite.Pages.PersonalInformation
             if (PersonalInformation.DateOfBirth < EarliestDate || PersonalInformation.DateOfBirth > LatestDate)
             {
                 ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
-                ModelState.AddModelError("Custom", "Invalid Date of Birth.");
+                DateOfBirthErrorMessage = "Invalid Date of Birth.";
                 return Page();
             }
             if (PersonalInformation.PhoneNumber.Length != 10)
             {
                 ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
-                ModelState.AddModelError("Custom", "Invalid Phone Number.");
+                PhoneNumberErrorMessage = "Invalid Phone Number.";
                 return Page();
             }
             if (PersonalInformation.ECPhoneNumber.Length != 10)
             {
                 ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
-                ModelState.AddModelError("Custom", "Invalid Emergency Contact Phone Number.");
+                ECPhoneNumberErrorMessage = "Invalid Emergency Contact Phone Number.";
                 return Page();
             }
 
@@ -65,7 +69,7 @@ namespace AvcolCoCurricularWebsite.Pages.PersonalInformation
             if (pInfo != null)
             {
                 ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
-                ModelState.AddModelError("Custom", "This Staff already has a record of their personal information. Please edit the existing record.");
+                StaffErrorMessage = "This Staff already has a record of their Personal Information. Please edit the existing record.";
                 return Page();
             }
             else

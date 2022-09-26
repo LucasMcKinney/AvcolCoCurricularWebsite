@@ -22,6 +22,9 @@ namespace AvcolCoCurricularWebsite.Pages.PersonalInformation
 
         [BindProperty]
         public Models.PersonalInformation PersonalInformation { get; set; }
+        public string DateOfBirthErrorMessage { get; set; }
+        public string PhoneNumberErrorMessage { get; set; }
+        public string ECPhoneNumberErrorMessage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -52,19 +55,19 @@ namespace AvcolCoCurricularWebsite.Pages.PersonalInformation
             }
             if (PersonalInformation.DateOfBirth < EarliestDate || PersonalInformation.DateOfBirth > LatestDate)
             {
-                ModelState.AddModelError("Custom", "Invalid Date of Birth.");
+                DateOfBirthErrorMessage = "Invalid Date of Birth.";
                 return Page();
             }
             if (PersonalInformation.PhoneNumber.Length != 10)
             {
                 ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
-                ModelState.AddModelError("Custom", "Invalid Phone Number.");
+                PhoneNumberErrorMessage = "Invalid Phone Number.";
                 return Page();
             }
             if (PersonalInformation.ECPhoneNumber.Length != 10)
             {
                 ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
-                ModelState.AddModelError("Custom", "Invalid Emergency Contact Phone Number.");
+                ECPhoneNumberErrorMessage = "Invalid Emergency Contact Phone Number.";
                 return Page();
             }
 

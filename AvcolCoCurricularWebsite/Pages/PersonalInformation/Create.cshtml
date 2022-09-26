@@ -26,11 +26,13 @@
                 <select asp-for="PersonalInformation.StaffID" class ="form-control" asp-items="ViewBag.StaffID">
                     <option value="">-- Select Staff --</option>
                 </select>
+                <span class="text-danger">@Model.StaffErrorMessage</span>
             </div>
             <div class="form-group">
                 <label asp-for="PersonalInformation.DateOfBirth" class="control-label"></label>
                 <input asp-for="PersonalInformation.DateOfBirth" class="form-control" />
                 <span asp-validation-for="PersonalInformation.DateOfBirth" class="text-danger"></span>
+                <span class="text-danger">@Model.DateOfBirthErrorMessage</span>
             </div>
             <div class="form-group">
                 <label asp-for="PersonalInformation.Address" class="control-label"></label>
@@ -41,11 +43,13 @@
                 <label asp-for="PersonalInformation.PhoneNumber" class="control-label"></label>
                 <input asp-for="PersonalInformation.PhoneNumber" class="form-control" />
                 <span asp-validation-for="PersonalInformation.PhoneNumber" class="text-danger"></span>
+                <span class="text-danger">@Model.PhoneNumberErrorMessage</span>
             </div>
             <div class="form-group">
                 <label asp-for="PersonalInformation.ECPhoneNumber" class="control-label"></label>
                 <input asp-for="PersonalInformation.ECPhoneNumber" class="form-control" />
                 <span asp-validation-for="PersonalInformation.ECPhoneNumber" class="text-danger"></span>
+                <span class="text-danger">@Model.ECPhoneNumberErrorMessage</span>
             </div>
             <div class="form-group">
                 <label asp-for="PersonalInformation.ECRelationship" class="control-label"></label>
@@ -82,7 +86,6 @@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
-            @Html.ValidationSummary(false)
         </form>
     </div>
 </div>

@@ -26,6 +26,10 @@ namespace AvcolCoCurricularWebsite.Pages.Staff
 
         [BindProperty]
         public Models.Staff Staff { get; set; }
+        public string StaffErrorMessage { get; set; }
+        public string LastNameErrorMessage { get; set; }
+        public string FirstNameErrorMessage { get; set; }
+        public string HireDateErrorMessage { get; set; }
 
         private readonly DateTime BeginningHireDate = new DateTime(1945, 01, 01); // set BeginningHireDate to when avondale college started hiring staff
 
@@ -42,7 +46,17 @@ namespace AvcolCoCurricularWebsite.Pages.Staff
 
             if (staffName != null)
             {
-                ModelState.AddModelError("Custom", "Invalid Staff. Staff already exists."); // displays error message
+                StaffErrorMessage = "This Staff already has a record. Please edit the existing record."; // displays error message
+                return Page();
+            }
+            if (!Staff.LastName.Any(char.IsLetter))
+            {
+                LastNameErrorMessage = "Invalid Last Name. Last Name must contain letters only."; // displays error message
+                return Page();
+            }
+            if (!Staff.FirstName.Any(char.IsLetter))
+            {
+                FirstNameErrorMessage = "Invalid First Name. First Name must contain letters only."; // displays error message
                 return Page();
             }
 
@@ -96,7 +110,7 @@ namespace AvcolCoCurricularWebsite.Pages.Staff
 
             if (Staff.HireDate > DateTime.Now || Staff.HireDate < BeginningHireDate)
             {
-                ModelState.AddModelError("Custom", "Invalid Hire Date.");
+                HireDateErrorMessage = "Invalid Hire Date.";
                 return Page();
             }
 

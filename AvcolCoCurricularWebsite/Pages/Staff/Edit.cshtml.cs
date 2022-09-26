@@ -22,6 +22,7 @@ namespace AvcolCoCurricularWebsite.Pages.Staff
 
         [BindProperty]
         public Models.Staff Staff { get; set; }
+        public string HireDateErrorMessage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -50,7 +51,7 @@ namespace AvcolCoCurricularWebsite.Pages.Staff
 
             if (Staff.HireDate > DateTime.Now || Staff.HireDate < BeginningHireDate)
             {
-                ModelState.AddModelError("Custom", "Invalid Hire Date.");
+                HireDateErrorMessage = "Invalid Hire Date.";
                 return Page();
             }
 
