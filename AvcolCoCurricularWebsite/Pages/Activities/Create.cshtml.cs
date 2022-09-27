@@ -12,6 +12,8 @@ namespace AvcolCoCurricularWebsite.Pages.Activities
 {
     public class CreateModel : PageModel
     {
+        public static readonly string[] validRoomNumberBlock = { "A", "B", "C", "D", "E", "F" };
+
         private readonly AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext _context;
 
         public CreateModel(AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext context)
@@ -34,6 +36,10 @@ namespace AvcolCoCurricularWebsite.Pages.Activities
             {
                 return Page();
             }
+
+            // FROM HERE
+
+            // UNTIL HERE
 
             _context.Activity.Add(Activity);
             await _context.SaveChangesAsync();
