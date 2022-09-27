@@ -11,6 +11,11 @@ namespace AvcolCoCurricularWebsite.Models
         [Required]
         public string ActivityName { get; set; }
 
+        [Display(Name = "Room Number")]
+        [StringLength(3, ErrorMessage = "Invalid Room Number. Room Number must be 3 characters long.")]
+        [Required]
+        public string RoomNumber { get; set; }
+
         [Display(Name = "Sign Up Form")]
         [Required(ErrorMessage = "This field cannot be left empty.")]
         public string SignUpForm { get; set; }

@@ -13,11 +13,6 @@ namespace AvcolCoCurricularWebsite.Models
 
         public Activity Activity { get; set; }
 
-        [Display(Name = "Room Number")]
-        [StringLength(3, ErrorMessage = "Invalid Room Number. Room Number must be 3 characters long.")]
-        [Required]
-        public string RoomNumber { get; set; }
-
         [Display(Name = "Day")]
         [Required]
         public DayOfWeek Day { get; set; }
