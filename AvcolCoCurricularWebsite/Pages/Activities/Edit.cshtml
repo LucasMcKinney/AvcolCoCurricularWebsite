@@ -23,6 +23,7 @@
                 <label asp-for="Activity.RoomNumber" class="control-label"></label>
                 <input asp-for="Activity.RoomNumber" class="form-control" />
                 <span asp-validation-for="Activity.RoomNumber" class="text-danger"></span>
+                <span class="text-danger">@Model.RoomNumberErrorMessage</span>
             </div>
             <div class="form-group">
                 <label asp-for="Activity.SignUpForm" class="control-label"></label>

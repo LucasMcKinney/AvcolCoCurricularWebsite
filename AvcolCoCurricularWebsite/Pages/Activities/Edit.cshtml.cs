@@ -13,6 +13,8 @@ namespace AvcolCoCurricularWebsite.Pages.Activities
 {
     public class EditModel : PageModel
     {
+        public static readonly string[] validBlock = { "A", "B", "C", "D", "E", "F" };
+
         private readonly AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext _context;
 
         public EditModel(AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext context)
@@ -22,6 +24,7 @@ namespace AvcolCoCurricularWebsite.Pages.Activities
 
         [BindProperty]
         public Activity Activity { get; set; }
+        public string RoomNumberErrorMessage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -46,6 +49,113 @@ namespace AvcolCoCurricularWebsite.Pages.Activities
             if (!ModelState.IsValid)
             {
                 return Page();
+            }
+
+            //String[] validBlock = { "A", "B", "C", "D", "E", "F" };
+
+            bool validRoom = true;
+            var block = Activity.RoomNumber.ToUpper()[..1];
+
+            if (validBlock.Contains(block))
+            {
+                char[] number = Activity.RoomNumber[1..].ToCharArray();
+                int roomNumber = Int32.Parse(Activity.RoomNumber[1..]);
+
+                foreach (char n in number)
+                {
+                    if (!char.IsDigit(n))
+                    {
+                        validRoom = false;
+                    }
+                    else if (block == "A")
+                    {
+                        if (roomNumber < 1 || roomNumber > 46)
+                        {
+                            validRoom = false;
+                        }
+                        else
+                        {
+                            validRoom = true;
+                            break;
+                        }
+                    }
+                    else if (block == "B")
+                    {
+                        if (roomNumber < 1 || roomNumber > 17)
+                        {
+                            validRoom = false;
+                        }
+                        else
+                        {
+                            validRoom = true;
+                            break;
+                        }
+                    }
+                    else if (block == "C")
+                    {
+                        if (roomNumber < 1 || roomNumber > 29)
+                        {
+                            validRoom = false;
+                        }
+                        else
+                        {
+                            validRoom = true;
+                            break;
+                        }
+                    }
+                    else if (block == "D")
+                    {
+                        if (roomNumber < 1 || roomNumber > 29)
+                        {
+                            validRoom = false;
+                        }
+                        else
+                        {
+                            validRoom = true;
+                            break;
+                        }
+                    }
+                    else if (block == "E")
+                    {
+                        if (roomNumber < 1 || roomNumber > 12)
+                        {
+                            validRoom = false;
+                        }
+                        else
+                        {
+                            validRoom = true;
+                            break;
+                        }
+                    }
+                    else if (block == "F")
+                    {
+                        if (roomNumber < 1 || roomNumber > 14)
+                        {
+                            validRoom = false;
+                        }
+                        else
+                        {
+                            validRoom = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                validRoom = false;
+            }
+            if (validRoom == false)
+            {
+                ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
+                ViewData["ActivityID"] = new SelectList(_context.Activity, "ActivityID", "ActivityName");
+                RoomNumberErrorMessage = "This Room does not exist. Please type a valid Room Number, e.g. A37.";
+                return Page();
+            }
+            else
+            {
+                _context.Activity.Add(Activity);
+                await _context.SaveChangesAsync();
             }
 
             _context.Attach(Activity).State = EntityState.Modified;
