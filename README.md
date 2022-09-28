@@ -4,7 +4,7 @@ Easily create, edit, delete, filter Avondale College co-curricular activities av
 ## Getting Started
 
 ### Prerequisites
-- [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet/3.1)
+- [.NET 6.0](https://dotnet.microsoft.com/download/dotnet/6.0)
 
 ### Installation
 1. Download and open the project.
