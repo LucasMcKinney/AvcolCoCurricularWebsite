@@ -33,8 +33,8 @@ public class EditModel : PageModel
         return Page();
     }
 
-    private readonly DateTime EarliestDate = new DateTime(1922, 01, 01); // the earliest date of birth of a staff member since there are realistically no teachers aged over 100
-    private readonly DateTime LatestDate = new DateTime(2001, 01, 01); // the latest date of birth of a staff member since teachers complete their required 4 years of university by at least the age of 21
+    private readonly DateTime EarliestDate = new(1922, 01, 01); // the earliest date of birth of a staff member since there are realistically no teachers aged over 100
+    private readonly DateTime LatestDate = new(2001, 01, 01); // the latest date of birth of a staff member since teachers complete their required 4 years of university by at least the age of 21
 
     public async Task<IActionResult> OnPostAsync()
     {

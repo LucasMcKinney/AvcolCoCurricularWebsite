@@ -6,10 +6,9 @@ public static class DbInitializer
     {
         context.Database.EnsureCreated();
 
-        // Look for any staff
-        if (context.Staff.Any())
+        if (context.Staff.Any()) // Look for any staff
         {
-            return;   // DB has been seeded
+            return; // DB has been seeded
         }
 
         var staff = new Staff[]
