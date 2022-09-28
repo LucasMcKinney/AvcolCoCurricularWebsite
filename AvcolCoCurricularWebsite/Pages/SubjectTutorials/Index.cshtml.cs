@@ -1,70 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using AvcolCoCurricularWebsite.Data;
-using AvcolCoCurricularWebsite.Models;
+﻿namespace AvcolCoCurricularWebsite.Pages.SubjectTutorials;
 
-namespace AvcolCoCurricularWebsite.Pages.SubjectTutorials
+public class IndexModel : PageModel
 {
-    public class IndexModel : PageModel
+    private readonly AvcolCoCurricularWebsiteContext _context;
+    private readonly IConfiguration Configuration;
+
+    public IndexModel(AvcolCoCurricularWebsiteContext context, IConfiguration configuration)
     {
-        private readonly AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext _context;
-        private readonly IConfiguration Configuration;
+        _context = context;
+        Configuration = configuration;
+    }
 
-        public IndexModel(AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext context, IConfiguration configuration)
+    public string ActivitySort { get; set; }
+    public string CurrentFilter { get; set; }
+    public string CurrentSort { get; set; }
+
+    public PaginatedList<SubjectTutorial> SubjectTutorials { get; set; }
+
+    public async Task OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
+    {
+        CurrentSort = sortOrder;
+        ActivitySort = sortOrder == "Activity" ? "activity_desc" : "Activity";
+
+        if (searchString != null)
         {
-            _context = context;
-            Configuration = configuration;
+            pageIndex = 1;
+        }
+        else
+        {
+            searchString = currentFilter;
         }
 
-        public string ActivitySort { get; set; }
-        public string CurrentFilter { get; set; }
-        public string CurrentSort { get; set; }
+        CurrentFilter = searchString;
 
-        public PaginatedList<SubjectTutorial> SubjectTutorials { get; set; }
+        IQueryable<SubjectTutorial> subjecttutorialsIQ = from s in _context.SubjectTutorial
+                                                         select s;
 
-        public async Task OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
+        if (!string.IsNullOrEmpty(searchString))
         {
-            // using System;
-            CurrentSort = sortOrder;
-            ActivitySort = sortOrder == "Activity" ? "activity_desc" : "Activity";
-
-            if (searchString != null)
-            {
-                pageIndex = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
-
-            CurrentFilter = searchString;
-
-            IQueryable<SubjectTutorial> subjecttutorialsIQ = from s in _context.SubjectTutorial
-                                                             select s;
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                subjecttutorialsIQ = subjecttutorialsIQ.Where(s => s.Activity.ActivityName.ToUpper().Contains(searchString.ToUpper()));
-            }
-
-            switch (sortOrder)
-            {
-                case "activity_desc":
-                    subjecttutorialsIQ = subjecttutorialsIQ.OrderByDescending(s => s.Activity.ActivityName);
-                    break;
-                default:
-                    subjecttutorialsIQ = subjecttutorialsIQ.OrderBy(s => s.Activity.ActivityName);
-                    break;
-            }
-
-            var pageSize = Configuration.GetValue("PageSize", 10);
-            SubjectTutorials = await PaginatedList<SubjectTutorial>.CreateAsync(subjecttutorialsIQ.Include(s => s.Activity).AsNoTracking(), pageIndex ?? 1, pageSize);
+            subjecttutorialsIQ = subjecttutorialsIQ.Where(s => s.Activity.ActivityName.ToUpper().Contains(searchString.ToUpper()));
         }
+
+        subjecttutorialsIQ = sortOrder switch
+        {
+            "activity_desc" => subjecttutorialsIQ.OrderByDescending(s => s.Activity.ActivityName),
+            _ => subjecttutorialsIQ.OrderBy(s => s.Activity.ActivityName),
+        };
+
+        var pageSize = Configuration.GetValue("PageSize", 10);
+        SubjectTutorials = await PaginatedList<SubjectTutorial>.CreateAsync(subjecttutorialsIQ.Include(s => s.Activity).AsNoTracking(), pageIndex ?? 1, pageSize);
     }
 }

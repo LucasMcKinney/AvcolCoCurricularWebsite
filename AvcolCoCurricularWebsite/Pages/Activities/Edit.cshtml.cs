@@ -1,187 +1,173 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using AvcolCoCurricularWebsite.Data;
-using AvcolCoCurricularWebsite.Models;
+﻿namespace AvcolCoCurricularWebsite.Pages.Activities;
 
-namespace AvcolCoCurricularWebsite.Pages.Activities
+public class EditModel : PageModel
 {
-    public class EditModel : PageModel
+    private static readonly string[] validBlock = { "A", "B", "C", "D", "E", "F" };
+
+    private readonly AvcolCoCurricularWebsiteContext _context;
+
+    public EditModel(AvcolCoCurricularWebsiteContext context)
     {
-        public static readonly string[] validBlock = { "A", "B", "C", "D", "E", "F" };
+        _context = context;
+    }
 
-        private readonly AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext _context;
+    [BindProperty]
+    public Activity Activity { get; set; }
+    public string RoomNumberErrorMessage { get; set; }
 
-        public EditModel(AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext context)
+    public async Task<IActionResult> OnGetAsync(int? id)
+    {
+        if (id == null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        [BindProperty]
-        public Activity Activity { get; set; }
-        public string RoomNumberErrorMessage { get; set; }
+        Activity = await _context.Activity
+            .Include(a => a.Staff).FirstOrDefaultAsync(m => m.ActivityID == id);
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        if (Activity == null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            return NotFound();
+        }
+       ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
+        return Page();
+    }
 
-            Activity = await _context.Activity
-                .Include(a => a.Staff).FirstOrDefaultAsync(m => m.ActivityID == id);
-
-            if (Activity == null)
-            {
-                return NotFound();
-            }
-           ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (!ModelState.IsValid)
+        {
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        bool validRoom = true;
+        var block = Activity.RoomNumber.ToUpper()[..1];
+
+        if (validBlock.Contains(block))
         {
-            if (!ModelState.IsValid)
+            char[] number = Activity.RoomNumber[1..].ToCharArray();
+            int roomNumber = int.Parse(Activity.RoomNumber[1..]);
+
+            foreach (char n in number)
             {
-                return Page();
-            }
-
-            //String[] validBlock = { "A", "B", "C", "D", "E", "F" };
-
-            bool validRoom = true;
-            var block = Activity.RoomNumber.ToUpper()[..1];
-
-            if (validBlock.Contains(block))
-            {
-                char[] number = Activity.RoomNumber[1..].ToCharArray();
-                int roomNumber = Int32.Parse(Activity.RoomNumber[1..]);
-
-                foreach (char n in number)
+                if (!char.IsDigit(n))
                 {
-                    if (!char.IsDigit(n))
+                    validRoom = false;
+                }
+                else if (block == "A")
+                {
+                    if (roomNumber < 1 || roomNumber > 46)
                     {
                         validRoom = false;
                     }
-                    else if (block == "A")
+                    else
                     {
-                        if (roomNumber < 1 || roomNumber > 46)
-                        {
-                            validRoom = false;
-                        }
-                        else
-                        {
-                            validRoom = true;
-                            break;
-                        }
-                    }
-                    else if (block == "B")
-                    {
-                        if (roomNumber < 1 || roomNumber > 17)
-                        {
-                            validRoom = false;
-                        }
-                        else
-                        {
-                            validRoom = true;
-                            break;
-                        }
-                    }
-                    else if (block == "C")
-                    {
-                        if (roomNumber < 1 || roomNumber > 29)
-                        {
-                            validRoom = false;
-                        }
-                        else
-                        {
-                            validRoom = true;
-                            break;
-                        }
-                    }
-                    else if (block == "D")
-                    {
-                        if (roomNumber < 1 || roomNumber > 29)
-                        {
-                            validRoom = false;
-                        }
-                        else
-                        {
-                            validRoom = true;
-                            break;
-                        }
-                    }
-                    else if (block == "E")
-                    {
-                        if (roomNumber < 1 || roomNumber > 12)
-                        {
-                            validRoom = false;
-                        }
-                        else
-                        {
-                            validRoom = true;
-                            break;
-                        }
-                    }
-                    else if (block == "F")
-                    {
-                        if (roomNumber < 1 || roomNumber > 14)
-                        {
-                            validRoom = false;
-                        }
-                        else
-                        {
-                            validRoom = true;
-                            break;
-                        }
+                        validRoom = true;
+                        break;
                     }
                 }
-            }
-            else
-            {
-                validRoom = false;
-            }
-            if (validRoom == false)
-            {
-                ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
-                ViewData["ActivityID"] = new SelectList(_context.Activity, "ActivityID", "ActivityName");
-                RoomNumberErrorMessage = "This Room does not exist. Please type a valid Room Number, e.g. A37.";
-                return Page();
-            }
-            else
-            {
-                _context.Activity.Add(Activity);
-                await _context.SaveChangesAsync();
-            }
-
-            _context.Attach(Activity).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ActivityExists(Activity.ActivityID))
+                else if (block == "B")
                 {
-                    return NotFound();
+                    if (roomNumber < 1 || roomNumber > 17)
+                    {
+                        validRoom = false;
+                    }
+                    else
+                    {
+                        validRoom = true;
+                        break;
+                    }
                 }
-                else
+                else if (block == "C")
                 {
-                    throw;
+                    if (roomNumber < 1 || roomNumber > 29)
+                    {
+                        validRoom = false;
+                    }
+                    else
+                    {
+                        validRoom = true;
+                        break;
+                    }
+                }
+                else if (block == "D")
+                {
+                    if (roomNumber < 1 || roomNumber > 29)
+                    {
+                        validRoom = false;
+                    }
+                    else
+                    {
+                        validRoom = true;
+                        break;
+                    }
+                }
+                else if (block == "E")
+                {
+                    if (roomNumber < 1 || roomNumber > 12)
+                    {
+                        validRoom = false;
+                    }
+                    else
+                    {
+                        validRoom = true;
+                        break;
+                    }
+                }
+                else if (block == "F")
+                {
+                    if (roomNumber < 1 || roomNumber > 14)
+                    {
+                        validRoom = false;
+                    }
+                    else
+                    {
+                        validRoom = true;
+                        break;
+                    }
                 }
             }
-
-            return RedirectToPage("./Index");
         }
-
-        private bool ActivityExists(int id)
+        else
         {
-            return _context.Activity.Any(e => e.ActivityID == id);
+            validRoom = false;
         }
+        if (validRoom == false)
+        {
+            ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
+            ViewData["ActivityID"] = new SelectList(_context.Activity, "ActivityID", "ActivityName");
+            RoomNumberErrorMessage = "This Room does not exist. Please type a valid Room Number, e.g. A37.";
+            return Page();
+        }
+        else
+        {
+            _context.Activity.Add(Activity);
+            await _context.SaveChangesAsync();
+        }
+
+        _context.Attach(Activity).State = EntityState.Modified;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ActivityExists(Activity.ActivityID))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        return RedirectToPage("./Index");
+    }
+
+    private bool ActivityExists(int id)
+    {
+        return _context.Activity.Any(e => e.ActivityID == id);
     }
 }

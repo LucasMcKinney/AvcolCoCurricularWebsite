@@ -1,77 +1,65 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using AvcolCoCurricularWebsite.Data;
-using AvcolCoCurricularWebsite.Models;
+﻿namespace AvcolCoCurricularWebsite.Pages.PerformingArts;
 
-namespace AvcolCoCurricularWebsite.Pages.PerformingArts
+public class EditModel : PageModel
 {
-    public class EditModel : PageModel
-    {
-        private readonly AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext _context;
+    private readonly AvcolCoCurricularWebsiteContext _context;
 
-        public EditModel(AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext context)
+    public EditModel(AvcolCoCurricularWebsiteContext context)
+    {
+        _context = context;
+    }
+
+    [BindProperty]
+    public PerformingArt PerformingArt { get; set; }
+
+    public async Task<IActionResult> OnGetAsync(int? id)
+    {
+        if (id == null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        [BindProperty]
-        public PerformingArt PerformingArt { get; set; }
+        PerformingArt = await _context.PerformingArt
+            .Include(p => p.Activity).FirstOrDefaultAsync(m => m.PerformingArtID == id);
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        if (PerformingArt == null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            return NotFound();
+        }
+       ViewData["ActivityID"] = new SelectList(_context.Activity, "ActivityID", "ActivityName");
+        return Page();
+    }
 
-            PerformingArt = await _context.PerformingArt
-                .Include(p => p.Activity).FirstOrDefaultAsync(m => m.PerformingArtID == id);
-
-            if (PerformingArt == null)
-            {
-                return NotFound();
-            }
-           ViewData["ActivityID"] = new SelectList(_context.Activity, "ActivityID", "ActivityName");
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (!ModelState.IsValid)
+        {
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        _context.Attach(PerformingArt).State = EntityState.Modified;
+
+        try
         {
-            if (!ModelState.IsValid)
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!PerformingArtExists(PerformingArt.PerformingArtID))
             {
-                return Page();
+                return NotFound();
             }
-
-            _context.Attach(PerformingArt).State = EntityState.Modified;
-
-            try
+            else
             {
-                await _context.SaveChangesAsync();
+                throw;
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PerformingArtExists(PerformingArt.PerformingArtID))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return RedirectToPage("./Index");
         }
 
-        private bool PerformingArtExists(int id)
-        {
-            return _context.PerformingArt.Any(e => e.PerformingArtID == id);
-        }
+        return RedirectToPage("./Index");
+    }
+
+    private bool PerformingArtExists(int id)
+    {
+        return _context.PerformingArt.Any(e => e.PerformingArtID == id);
     }
 }

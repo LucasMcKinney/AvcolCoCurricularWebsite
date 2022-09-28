@@ -1,59 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using AvcolCoCurricularWebsite.Data;
-using AvcolCoCurricularWebsite.Models;
+﻿namespace AvcolCoCurricularWebsite.Pages.Staff;
 
-namespace AvcolCoCurricularWebsite.Pages.Staff
+public class DeleteModel : PageModel
 {
-    public class DeleteModel : PageModel
+    private readonly AvcolCoCurricularWebsiteContext _context;
+
+    public DeleteModel(AvcolCoCurricularWebsiteContext context)
     {
-        private readonly AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext _context;
+        _context = context;
+    }
 
-        public DeleteModel(AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext context)
+    [BindProperty]
+    public Models.Staff Staff { get; set; }
+
+    public async Task<IActionResult> OnGetAsync(int? id)
+    {
+        if (id == null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        [BindProperty]
-        public Models.Staff Staff { get; set; }
+        Staff = await _context.Staff.FirstOrDefaultAsync(m => m.StaffID == id);
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        if (Staff == null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            return NotFound();
+        }
+        return Page();
+    }
 
-            Staff = await _context.Staff.FirstOrDefaultAsync(m => m.StaffID == id);
-
-            if (Staff == null)
-            {
-                return NotFound();
-            }
-            return Page();
+    public async Task<IActionResult> OnPostAsync(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        Staff = await _context.Staff.FindAsync(id);
+
+        if (Staff != null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            Staff = await _context.Staff.FindAsync(id);
-
-            if (Staff != null)
-            {
-                _context.Staff.Remove(Staff);
-                await _context.SaveChangesAsync();
-            }
-
-            return RedirectToPage("./Index");
+            _context.Staff.Remove(Staff);
+            await _context.SaveChangesAsync();
         }
+
+        return RedirectToPage("./Index");
     }
 }

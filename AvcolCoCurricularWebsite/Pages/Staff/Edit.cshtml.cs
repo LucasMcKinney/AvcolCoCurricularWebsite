@@ -1,84 +1,72 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using AvcolCoCurricularWebsite.Data;
-using AvcolCoCurricularWebsite.Models;
+﻿namespace AvcolCoCurricularWebsite.Pages.Staff;
 
-namespace AvcolCoCurricularWebsite.Pages.Staff
+public class EditModel : PageModel
 {
-    public class EditModel : PageModel
-    {
-        private readonly AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext _context;
+    private readonly AvcolCoCurricularWebsiteContext _context;
 
-        public EditModel(AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext context)
+    public EditModel(AvcolCoCurricularWebsiteContext context)
+    {
+        _context = context;
+    }
+
+    [BindProperty]
+    public Models.Staff Staff { get; set; }
+    public string HireDateErrorMessage { get; set; }
+
+    public async Task<IActionResult> OnGetAsync(int? id)
+    {
+        if (id == null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        [BindProperty]
-        public Models.Staff Staff { get; set; }
-        public string HireDateErrorMessage { get; set; }
+        Staff = await _context.Staff.FirstOrDefaultAsync(m => m.StaffID == id);
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        if (Staff == null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            return NotFound();
+        }
+        return Page();
+    }
 
-            Staff = await _context.Staff.FirstOrDefaultAsync(m => m.StaffID == id);
+    private readonly DateTime BeginningHireDate = new DateTime(1945, 01, 01); // set BeginningHireDate to when avondale college started hiring staff
 
-            if (Staff == null)
-            {
-                return NotFound();
-            }
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (!ModelState.IsValid)
+        {
             return Page();
         }
 
-        private readonly DateTime BeginningHireDate = new DateTime(1945, 01, 01); // set BeginningHireDate to when avondale college started hiring staff
-
-        public async Task<IActionResult> OnPostAsync()
+        if (Staff.HireDate > DateTime.Now || Staff.HireDate < BeginningHireDate)
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            if (Staff.HireDate > DateTime.Now || Staff.HireDate < BeginningHireDate)
-            {
-                HireDateErrorMessage = "Invalid Hire Date.";
-                return Page();
-            }
-
-            _context.Attach(Staff).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!StaffExists(Staff.StaffID))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return RedirectToPage("./Index");
+            HireDateErrorMessage = "Invalid Hire Date.";
+            return Page();
         }
 
-        private bool StaffExists(int id)
+        _context.Attach(Staff).State = EntityState.Modified;
+
+        try
         {
-            return _context.Staff.Any(e => e.StaffID == id);
+            await _context.SaveChangesAsync();
         }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!StaffExists(Staff.StaffID))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        return RedirectToPage("./Index");
+    }
+
+    private bool StaffExists(int id)
+    {
+        return _context.Staff.Any(e => e.StaffID == id);
     }
 }

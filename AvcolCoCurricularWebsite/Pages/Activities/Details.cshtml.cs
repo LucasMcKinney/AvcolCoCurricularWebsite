@@ -1,41 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using AvcolCoCurricularWebsite.Data;
-using AvcolCoCurricularWebsite.Models;
+﻿namespace AvcolCoCurricularWebsite.Pages.Activities;
 
-namespace AvcolCoCurricularWebsite.Pages.Activities
+public class DetailsModel : PageModel
 {
-    public class DetailsModel : PageModel
+    private readonly AvcolCoCurricularWebsiteContext _context;
+
+    public DetailsModel(AvcolCoCurricularWebsiteContext context)
     {
-        private readonly AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext _context;
+        _context = context;
+    }
 
-        public DetailsModel(AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext context)
+    public Activity Activity { get; set; }
+
+    public async Task<IActionResult> OnGetAsync(int? id)
+    {
+        if (id == null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        public Activity Activity { get; set; }
+        Activity = await _context.Activity
+            .Include(a => a.Staff).FirstOrDefaultAsync(m => m.ActivityID == id);
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        if (Activity == null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            Activity = await _context.Activity
-                .Include(a => a.Staff).FirstOrDefaultAsync(m => m.ActivityID == id);
-
-            if (Activity == null)
-            {
-                return NotFound();
-            }
-            return Page();
+            return NotFound();
         }
+        return Page();
     }
 }

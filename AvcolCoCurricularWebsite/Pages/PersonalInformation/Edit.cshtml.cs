@@ -1,100 +1,88 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using AvcolCoCurricularWebsite.Data;
-using AvcolCoCurricularWebsite.Models;
+﻿namespace AvcolCoCurricularWebsite.Pages.PersonalInformation;
 
-namespace AvcolCoCurricularWebsite.Pages.PersonalInformation
+public class EditModel : PageModel
 {
-    public class EditModel : PageModel
-    {
-        private readonly AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext _context;
+    private readonly AvcolCoCurricularWebsiteContext _context;
 
-        public EditModel(AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext context)
+    public EditModel(AvcolCoCurricularWebsiteContext context)
+    {
+        _context = context;
+    }
+
+    [BindProperty]
+    public Models.PersonalInformation PersonalInformation { get; set; }
+    public string DateOfBirthErrorMessage { get; set; }
+    public string PhoneNumberErrorMessage { get; set; }
+    public string ECPhoneNumberErrorMessage { get; set; }
+
+    public async Task<IActionResult> OnGetAsync(int? id)
+    {
+        if (id == null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        [BindProperty]
-        public Models.PersonalInformation PersonalInformation { get; set; }
-        public string DateOfBirthErrorMessage { get; set; }
-        public string PhoneNumberErrorMessage { get; set; }
-        public string ECPhoneNumberErrorMessage { get; set; }
+        PersonalInformation = await _context.PersonalInformation
+            .Include(p => p.Staff).FirstOrDefaultAsync(m => m.StaffID == id);
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        if (PersonalInformation == null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            return NotFound();
+        }
+        ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
+        return Page();
+    }
 
-            PersonalInformation = await _context.PersonalInformation
-                .Include(p => p.Staff).FirstOrDefaultAsync(m => m.StaffID == id);
+    private readonly DateTime EarliestDate = new DateTime(1922, 01, 01); // the earliest date of birth of a staff member since there are realistically no teachers aged over 100
+    private readonly DateTime LatestDate = new DateTime(2001, 01, 01); // the latest date of birth of a staff member since teachers complete their required 4 years of university by at least the age of 21
 
-            if (PersonalInformation == null)
-            {
-                return NotFound();
-            }
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (!ModelState.IsValid)
+        {
+            return Page();
+        }
+        if (PersonalInformation.DateOfBirth < EarliestDate || PersonalInformation.DateOfBirth > LatestDate)
+        {
+            DateOfBirthErrorMessage = "Invalid Date of Birth.";
+            return Page();
+        }
+        if (PersonalInformation.PhoneNumber.Length != 10)
+        {
             ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
+            PhoneNumberErrorMessage = "Invalid Phone Number.";
+            return Page();
+        }
+        if (PersonalInformation.ECPhoneNumber.Length != 10)
+        {
+            ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
+            ECPhoneNumberErrorMessage = "Invalid Emergency Contact Phone Number.";
             return Page();
         }
 
-        private readonly DateTime EarliestDate = new DateTime(1922, 01, 01); // the earliest date of birth of a staff member since there are realistically no teachers aged over 100
-        private readonly DateTime LatestDate = new DateTime(2001, 01, 01); // the latest date of birth of a staff member since teachers complete their required 4 years of university by at least the age of 21
+        _context.Attach(PersonalInformation).State = EntityState.Modified;
 
-        public async Task<IActionResult> OnPostAsync()
+        try
         {
-            if (!ModelState.IsValid)
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!PersonalInformationExists(PersonalInformation.StaffID))
             {
-                return Page();
+                return NotFound();
             }
-            if (PersonalInformation.DateOfBirth < EarliestDate || PersonalInformation.DateOfBirth > LatestDate)
+            else
             {
-                DateOfBirthErrorMessage = "Invalid Date of Birth.";
-                return Page();
+                throw;
             }
-            if (PersonalInformation.PhoneNumber.Length != 10)
-            {
-                ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
-                PhoneNumberErrorMessage = "Invalid Phone Number.";
-                return Page();
-            }
-            if (PersonalInformation.ECPhoneNumber.Length != 10)
-            {
-                ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
-                ECPhoneNumberErrorMessage = "Invalid Emergency Contact Phone Number.";
-                return Page();
-            }
-
-            _context.Attach(PersonalInformation).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PersonalInformationExists(PersonalInformation.StaffID))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return RedirectToPage("./Index");
         }
 
-        private bool PersonalInformationExists(int id)
-        {
-            return _context.PersonalInformation.Any(e => e.StaffID == id);
-        }
+        return RedirectToPage("./Index");
+    }
+
+    private bool PersonalInformationExists(int id)
+    {
+        return _context.PersonalInformation.Any(e => e.StaffID == id);
     }
 }

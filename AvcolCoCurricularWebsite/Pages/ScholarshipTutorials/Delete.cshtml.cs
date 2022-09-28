@@ -1,60 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using AvcolCoCurricularWebsite.Data;
-using AvcolCoCurricularWebsite.Models;
+﻿namespace AvcolCoCurricularWebsite.Pages.ScholarshipTutorials;
 
-namespace AvcolCoCurricularWebsite.Pages.ScholarshipTutorials
+public class DeleteModel : PageModel
 {
-    public class DeleteModel : PageModel
+    private readonly AvcolCoCurricularWebsiteContext _context;
+
+    public DeleteModel(AvcolCoCurricularWebsiteContext context)
     {
-        private readonly AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext _context;
+        _context = context;
+    }
 
-        public DeleteModel(AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext context)
+    [BindProperty]
+    public ScholarshipTutorial ScholarshipTutorial { get; set; }
+
+    public async Task<IActionResult> OnGetAsync(int? id)
+    {
+        if (id == null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        [BindProperty]
-        public ScholarshipTutorial ScholarshipTutorial { get; set; }
+        ScholarshipTutorial = await _context.ScholarshipTutorial
+            .Include(s => s.Activity).FirstOrDefaultAsync(m => m.ScholarshipTutorialID == id);
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        if (ScholarshipTutorial == null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            return NotFound();
+        }
+        return Page();
+    }
 
-            ScholarshipTutorial = await _context.ScholarshipTutorial
-                .Include(s => s.Activity).FirstOrDefaultAsync(m => m.ScholarshipTutorialID == id);
-
-            if (ScholarshipTutorial == null)
-            {
-                return NotFound();
-            }
-            return Page();
+    public async Task<IActionResult> OnPostAsync(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        ScholarshipTutorial = await _context.ScholarshipTutorial.FindAsync(id);
+
+        if (ScholarshipTutorial != null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            ScholarshipTutorial = await _context.ScholarshipTutorial.FindAsync(id);
-
-            if (ScholarshipTutorial != null)
-            {
-                _context.ScholarshipTutorial.Remove(ScholarshipTutorial);
-                await _context.SaveChangesAsync();
-            }
-
-            return RedirectToPage("./Index");
+            _context.ScholarshipTutorial.Remove(ScholarshipTutorial);
+            await _context.SaveChangesAsync();
         }
+
+        return RedirectToPage("./Index");
     }
 }

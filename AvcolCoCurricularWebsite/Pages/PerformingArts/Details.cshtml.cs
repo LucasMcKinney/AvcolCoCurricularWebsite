@@ -1,41 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using AvcolCoCurricularWebsite.Data;
-using AvcolCoCurricularWebsite.Models;
+﻿namespace AvcolCoCurricularWebsite.Pages.PerformingArts;
 
-namespace AvcolCoCurricularWebsite.Pages.PerformingArts
+public class DetailsModel : PageModel
 {
-    public class DetailsModel : PageModel
+    private readonly AvcolCoCurricularWebsiteContext _context;
+
+    public DetailsModel(AvcolCoCurricularWebsiteContext context)
     {
-        private readonly AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext _context;
+        _context = context;
+    }
 
-        public DetailsModel(AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext context)
+    public PerformingArt PerformingArt { get; set; }
+
+    public async Task<IActionResult> OnGetAsync(int? id)
+    {
+        if (id == null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        public PerformingArt PerformingArt { get; set; }
+        PerformingArt = await _context.PerformingArt
+            .Include(p => p.Activity).FirstOrDefaultAsync(m => m.PerformingArtID == id);
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        if (PerformingArt == null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            PerformingArt = await _context.PerformingArt
-                .Include(p => p.Activity).FirstOrDefaultAsync(m => m.PerformingArtID == id);
-
-            if (PerformingArt == null)
-            {
-                return NotFound();
-            }
-            return Page();
+            return NotFound();
         }
+        return Page();
     }
 }

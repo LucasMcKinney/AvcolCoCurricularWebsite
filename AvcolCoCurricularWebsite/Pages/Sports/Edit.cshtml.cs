@@ -1,77 +1,65 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using AvcolCoCurricularWebsite.Data;
-using AvcolCoCurricularWebsite.Models;
+﻿namespace AvcolCoCurricularWebsite.Pages.Sports;
 
-namespace AvcolCoCurricularWebsite.Pages.Sports
+public class EditModel : PageModel
 {
-    public class EditModel : PageModel
-    {
-        private readonly AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext _context;
+    private readonly AvcolCoCurricularWebsiteContext _context;
 
-        public EditModel(AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext context)
+    public EditModel(AvcolCoCurricularWebsiteContext context)
+    {
+        _context = context;
+    }
+
+    [BindProperty]
+    public Sport Sport { get; set; }
+
+    public async Task<IActionResult> OnGetAsync(int? id)
+    {
+        if (id == null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        [BindProperty]
-        public Sport Sport { get; set; }
+        Sport = await _context.Sport
+            .Include(s => s.Activity).FirstOrDefaultAsync(m => m.SportID == id);
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        if (Sport == null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            return NotFound();
+        }
+       ViewData["ActivityID"] = new SelectList(_context.Activity, "ActivityID", "ActivityName");
+        return Page();
+    }
 
-            Sport = await _context.Sport
-                .Include(s => s.Activity).FirstOrDefaultAsync(m => m.SportID == id);
-
-            if (Sport == null)
-            {
-                return NotFound();
-            }
-           ViewData["ActivityID"] = new SelectList(_context.Activity, "ActivityID", "ActivityName");
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (!ModelState.IsValid)
+        {
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        _context.Attach(Sport).State = EntityState.Modified;
+
+        try
         {
-            if (!ModelState.IsValid)
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!SportExists(Sport.SportID))
             {
-                return Page();
+                return NotFound();
             }
-
-            _context.Attach(Sport).State = EntityState.Modified;
-
-            try
+            else
             {
-                await _context.SaveChangesAsync();
+                throw;
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SportExists(Sport.SportID))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return RedirectToPage("./Index");
         }
 
-        private bool SportExists(int id)
-        {
-            return _context.Sport.Any(e => e.SportID == id);
-        }
+        return RedirectToPage("./Index");
+    }
+
+    private bool SportExists(int id)
+    {
+        return _context.Sport.Any(e => e.SportID == id);
     }
 }

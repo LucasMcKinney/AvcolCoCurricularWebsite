@@ -1,60 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using AvcolCoCurricularWebsite.Data;
-using AvcolCoCurricularWebsite.Models;
+﻿namespace AvcolCoCurricularWebsite.Pages.Clubs;
 
-namespace AvcolCoCurricularWebsite.Pages.Clubs
+public class DeleteModel : PageModel
 {
-    public class DeleteModel : PageModel
+    private readonly AvcolCoCurricularWebsiteContext _context;
+
+    public DeleteModel(AvcolCoCurricularWebsiteContext context)
     {
-        private readonly AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext _context;
+        _context = context;
+    }
 
-        public DeleteModel(AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext context)
+    [BindProperty]
+    public Club Club { get; set; }
+
+    public async Task<IActionResult> OnGetAsync(int? id)
+    {
+        if (id == null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        [BindProperty]
-        public Club Club { get; set; }
+        Club = await _context.Club
+            .Include(c => c.Activity).FirstOrDefaultAsync(m => m.ClubID == id);
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        if (Club == null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            return NotFound();
+        }
+        return Page();
+    }
 
-            Club = await _context.Club
-                .Include(c => c.Activity).FirstOrDefaultAsync(m => m.ClubID == id);
-
-            if (Club == null)
-            {
-                return NotFound();
-            }
-            return Page();
+    public async Task<IActionResult> OnPostAsync(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        Club = await _context.Club.FindAsync(id);
+
+        if (Club != null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            Club = await _context.Club.FindAsync(id);
-
-            if (Club != null)
-            {
-                _context.Club.Remove(Club);
-                await _context.SaveChangesAsync();
-            }
-
-            return RedirectToPage("./Index");
+            _context.Club.Remove(Club);
+            await _context.SaveChangesAsync();
         }
+
+        return RedirectToPage("./Index");
     }
 }

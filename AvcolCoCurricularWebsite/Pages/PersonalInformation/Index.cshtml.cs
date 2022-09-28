@@ -1,22 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using AvcolCoCurricularWebsite.Data;
-using AvcolCoCurricularWebsite.Models;
-
-namespace AvcolCoCurricularWebsite.Pages.PersonalInformation
+﻿namespace AvcolCoCurricularWebsite.Pages.PersonalInformation
 {
     public class IndexModel : PageModel
     {
-        private readonly AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext _context;
+        private readonly AvcolCoCurricularWebsiteContext _context;
         private readonly IConfiguration Configuration;
 
-        public IndexModel(AvcolCoCurricularWebsite.Data.AvcolCoCurricularWebsiteContext context, IConfiguration configuration)
+        public IndexModel(AvcolCoCurricularWebsiteContext context, IConfiguration configuration)
         {
             _context = context;
             Configuration = configuration;
@@ -30,7 +19,6 @@ namespace AvcolCoCurricularWebsite.Pages.PersonalInformation
 
         public async Task OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
         {
-            // using System;
             CurrentSort = sortOrder;
             StaffSort = sortOrder == "Staff" ? "staff_desc" : "Staff";
 
@@ -53,15 +41,11 @@ namespace AvcolCoCurricularWebsite.Pages.PersonalInformation
                 personalinformationIQ = personalinformationIQ.Where(s => s.Staff.LastName.ToUpper().Contains(searchString.ToUpper()));
             }
 
-            switch (sortOrder)
+            personalinformationIQ = sortOrder switch
             {
-                case "staff_desc":
-                    personalinformationIQ = personalinformationIQ.OrderByDescending(s => s.Staff.LastName);
-                    break;
-                default:
-                    personalinformationIQ = personalinformationIQ.OrderBy(s => s.Staff.LastName);
-                    break;
-            }
+                "staff_desc" => personalinformationIQ.OrderByDescending(s => s.Staff.LastName),
+                _ => personalinformationIQ.OrderBy(s => s.Staff.LastName),
+            };
 
             var pageSize = Configuration.GetValue("PageSize", 10);
             PersonalInformation = await PaginatedList<Models.PersonalInformation>.CreateAsync(personalinformationIQ.Include(p => p.Staff).AsNoTracking(), pageIndex ?? 1, pageSize);
