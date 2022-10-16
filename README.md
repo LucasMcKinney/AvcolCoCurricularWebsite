@@ -1,3 +1,4 @@
+# ![Avondale College Co-Curricular](AvcolCoCurricularWebsite/wwwroot/images/Logo.png)
 # Avcol Co-Curricular Website
 Easily create, edit, delete, filter Avondale College co-curricular activities available to students, view activities in a timetable, find which room they are held in, when they start and finish, and how to contact the relevant teacher in charge of an activity.
 
