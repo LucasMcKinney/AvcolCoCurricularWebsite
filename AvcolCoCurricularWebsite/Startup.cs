@@ -36,7 +36,7 @@ public class Startup
             await next();
             if (context.Response.StatusCode == 404)
             {
-                context.Request.Path = "/Error";
+                context.Request.Path = "/404";
                 await next();
             }
         });
