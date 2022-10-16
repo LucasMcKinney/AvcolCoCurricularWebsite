@@ -1,46 +1,68 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Homepage";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<body style="background-image: url(); background-image: url('images/Background.jpg'); background-repeat: no-repeat; background-size: cover;">
+    <div class="text-center text-white py-5">
+        <h1 class="display-4 font-weight-bold mb-4">Avondale College Co-Curricular</h1>
+    </div>
+</body>
 
 <div class="row mb-auto">
     <div class="col-md-4">
-        <div class="row no-gutters border mb-4">
+        <div class="row no-gutters border bg-dark mb-4">
             <div class="col p-4 mb-4 ">
-                <p class="card-text">
-                    Contoso University is a sample application that
-                    demonstrates how to use Entity Framework Core in an
-                    ASP.NET Core Razor Pages web app.
+                <p class="card-text text-white">
+                    Create, Edit, Delete, Filter and View details of Co-Curricular <a href="/Activities">Activities</a> across different groups at <a href="https://www.avcol.school.nz/">Avondale College</a> including:
+
+                    <ul>
+                        <li style="color:white">
+                            <a href="/Clubs">Clubs</a>
+                        </li>
+                        <li style="color:white">
+                            <a href="/Music">Music</a>
+                        </li>
+                        <li style="color:white">
+                            <a href="/PerformingArts">Performing Arts</a>
+                        </li>
+                        <li style="color:white">
+                            <a href="/ScholarshipTutorials">Scholarship Tutorials</a>
+                        </li>
+                        <li style="color:white">
+                            <a href="/Sports">Sports</a>
+                        </li>
+                        <li style="color:white">
+                            <a href="/SubjectTutorials">Subject Tutorials</a>
+                        </li>
+                    </ul>
                 </p>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="row no-gutters border mb-4">
+        <div class="row no-gutters border bg-dark mb-4">
             <div class="col p-4 d-flex flex-column position-static">
-                <p class="card-text mb-auto">
-                    You can build the application by following the steps in a series of tutorials.
+                <p class="card-text text-white mb-auto">
+                    Create, Edit, Delete, Filter and View details of Co-Curricular Staff at Avondale College.
                 </p>
+                <br>
                 <p>
-                    <a href="https://docs.microsoft.com/aspnet/core/data/ef-rp/intro" class="stretched-link">See the tutorial</a>
+                    <a href="/Staff" class="stretched-link">Find out how to contact the relevant Staff</a>
                 </p>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="row no-gutters border mb-4">
+        <div class="row no-gutters border bg-dark mb-4">
             <div class="col p-4 d-flex flex-column">
-                <p class="card-text mb-auto">
-                    You can download the completed project from GitHub.
+                <p class="card-text text-white mb-auto">
+                    Create, Edit, Delete, Filter and View details of Co-Curricular Staff Personal Information at Avondale College.
                 </p>
+                <br>
                 <p>
-                    <a href="https://github.com/dotnet/AspNetCore.Docs/tree/main/aspnetcore/data/ef-rp/intro/samples" class="stretched-link">See project source code</a>
+                    <a href="/PersonalInformation" class="stretched-link">Find out Personal Information of the relevant Staff</a>
                 </p>
             </div>
         </div>
