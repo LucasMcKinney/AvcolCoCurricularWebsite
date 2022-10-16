@@ -21,7 +21,7 @@ public class CreateModel : PageModel
     public string FirstNameErrorMessage { get; set; }
     public string HireDateErrorMessage { get; set; }
 
-    private readonly DateTime BeginningHireDate = new DateTime(1945, 01, 01); // set BeginningHireDate to when avondale college started hiring staff
+    private readonly DateTime BeginningHireDate = new(1945, 01, 01); // set BeginningHireDate to when avondale college started hiring staff
 
     public async Task<IActionResult> OnPostAsync()
     {

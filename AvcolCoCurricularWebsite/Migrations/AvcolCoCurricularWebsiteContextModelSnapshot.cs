@@ -6,7 +6,6 @@ partial class AvcolCoCurricularWebsiteContextModelSnapshot : ModelSnapshot
 {
     protected override void BuildModel(ModelBuilder modelBuilder)
     {
-#pragma warning disable 612, 618
         modelBuilder
             .HasAnnotation("ProductVersion", "3.1.28")
             .HasAnnotation("Relational:MaxIdentifierLength", 128)
@@ -342,6 +341,5 @@ partial class AvcolCoCurricularWebsiteContextModelSnapshot : ModelSnapshot
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
             });
-#pragma warning restore 612, 618
     }
 }
