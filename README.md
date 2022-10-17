@@ -13,6 +13,5 @@ Easily create, edit, delete, filter Avondale College co-curricular activities av
 
 #### Git Commands
 1. ```git clone https://github.com/LucasMcKinney/AvcolCoCurricularWebsite.git```
-2. ```cd AvcolCoCurricularWebsite```
-3. ```cd AvcolCoCurricularWebsite```
-4. ```dotnet run```
+2. ```cd AvcolCoCurricularWebsite\AvcolCoCurricularWebsite```
+3. ```dotnet run```
