@@ -132,7 +132,7 @@ public class EditModel : PageModel
         {
             validRoom = false;
         }
-        if (validRoom == false)
+        if (!validRoom)
         {
             ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
             ViewData["ActivityID"] = new SelectList(_context.Activity, "ActivityID", "ActivityName");
