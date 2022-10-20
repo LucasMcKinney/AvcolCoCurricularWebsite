@@ -139,11 +139,6 @@ public class EditModel : PageModel
             RoomNumberErrorMessage = "This Room does not exist. Please type a valid Room Number, e.g. A37.";
             return Page();
         }
-        else
-        {
-            _context.Activity.Add(Activity);
-            await _context.SaveChangesAsync();
-        }
 
         _context.Attach(Activity).State = EntityState.Modified;
 
