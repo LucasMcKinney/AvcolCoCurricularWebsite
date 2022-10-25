@@ -30,7 +30,7 @@ public class EditModel : PageModel
         {
             return NotFound();
         }
-       ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
+        ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
         return Page();
     }
 
@@ -43,6 +43,7 @@ public class EditModel : PageModel
 
         if (!Activity.ActivityName.Any(char.IsLetter))
         {
+            ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
             ActivityErrorMessage = "Invalid Activity Name. Activity Name must contain letters only."; // displays error message
             return Page();
         }
@@ -57,6 +58,7 @@ public class EditModel : PageModel
 
             foreach (char b in roomBlock)
             {
+                // switch to case
                 if (char.IsDigit(b)) // if any character in roomBlock is a digit then validRoom is false
                 {
                     validRoom = false;

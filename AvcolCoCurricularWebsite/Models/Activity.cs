@@ -10,6 +10,10 @@ public class Activity
     public string ActivityName { get; set; }
 
     [Display(Name = "Room Number")]
+
+    [RegularExpression(@"[a-fA-F]\d{1,2}", ErrorMessage = "Invalid Room Number. Room Number must contain either A, B, C, D, E, or F at the beginning.")]
+    // [RegularExpression(@"^[a-fA-F''-'\s]{1,3}$", ErrorMessage = "Invalid Room Number. Room Number must contain either A, B, C, D, E, or F at the beginning.")]
+    // int.Parse("A20".AsSpan(1));
     [StringLength(3, ErrorMessage = "Invalid Room Number. Room Number must be 3 characters long.")]
     [Required]
     public string RoomNumber { get; set; }
