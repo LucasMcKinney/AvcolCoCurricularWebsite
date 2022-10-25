@@ -27,7 +27,10 @@ public class CreateModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        Models.Staff staff = (from s in _context.Staff where s.StaffID == PersonalInformation.StaffID select s).FirstOrDefault();
+        Models.Staff staff = (from s in _context.Staff
+                              where s.StaffID == PersonalInformation.StaffID
+                              select s).FirstOrDefault();
+
         PersonalInformation.EmailAddress = staff.TeacherCode + "@avcol.school.nz";
 
         if (!ModelState.IsValid)
@@ -54,9 +57,11 @@ public class CreateModel : PageModel
             return Page();
         }
 
-        Models.PersonalInformation pInfo = (from p in _context.PersonalInformation where p.StaffID == PersonalInformation.StaffID select p).FirstOrDefault();
+        Models.PersonalInformation personalInformation = (from p in _context.PersonalInformation
+                                                          where p.StaffID == PersonalInformation.StaffID
+                                                          select p).FirstOrDefault();
 
-        if (pInfo != null)
+        if (personalInformation != null)
         {
             ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
             StaffErrorMessage = "This Staff already has a record of their Personal Information. Please edit the existing record.";

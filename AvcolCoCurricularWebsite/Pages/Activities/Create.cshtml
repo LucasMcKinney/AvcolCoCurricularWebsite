@@ -17,6 +17,7 @@
                 <label asp-for="Activity.ActivityName" class="control-label"></label>
                 <input asp-for="Activity.ActivityName" class="form-control" />
                 <span asp-validation-for="Activity.ActivityName" class="text-danger"></span>
+                <span class="text-danger">@Model.ActivityErrorMessage</span>
             </div>
             <div class="form-group">
                 <label asp-for="Activity.RoomNumber" class="control-label"></label>
@@ -34,6 +35,7 @@
                 <select asp-for="Activity.StaffID" class ="form-control" asp-items="ViewBag.StaffID">
                     <option value="">-- Select Staff --</option>
                 </select>
+                <span class="text-danger">@Model.StaffErrorMessage</span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

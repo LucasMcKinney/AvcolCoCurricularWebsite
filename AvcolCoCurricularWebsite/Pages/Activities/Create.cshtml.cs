@@ -2,7 +2,7 @@
 
 public class CreateModel : PageModel
 {
-    private static readonly string[] _validBlock = { "A", "B", "C", "D", "E", "F" };
+    private static readonly string[] validBlock = { "A", "B", "C", "D", "E", "F" };
 
     private readonly AvcolCoCurricularWebsiteContext _context;
 
@@ -19,7 +19,9 @@ public class CreateModel : PageModel
 
     [BindProperty]
     public Activity Activity { get; set; }
+    public string ActivityErrorMessage { get; set; }
     public string RoomNumberErrorMessage { get; set; }
+    public string StaffErrorMessage { get; set; }
 
     public async Task<IActionResult> OnPostAsync()
     {
@@ -28,17 +30,32 @@ public class CreateModel : PageModel
             return Page();
         }
 
-        bool validRoom = true;
-        var block = Activity.RoomNumber.ToUpper()[..1];
+        var activityName = (from s in _context.Activity
+                            where s.ActivityName == Activity.ActivityName
+                            select s).FirstOrDefault(); // checks if there are any activities with the same name which already exists
 
-        if (_validBlock.Contains(block))
+        if (activityName != null)
         {
-            char[] number = Activity.RoomNumber[1..].ToCharArray();
+            ActivityErrorMessage = "This Activity already has a record. Please edit the existing record."; // displays error message
+            return Page();
+        }
+        if (!Activity.ActivityName.Any(char.IsLetter))
+        {
+            ActivityErrorMessage = "Invalid Activity Name. Activity Name must contain letters only."; // displays error message
+            return Page();
+        }
+
+        bool validRoom = true;
+        var block = Activity.RoomNumber[..1];
+
+        if (validBlock.Contains(block))
+        {
+            char[] roomBlock = Activity.RoomNumber[1..].ToUpper().ToCharArray();
             int roomNumber = int.Parse(Activity.RoomNumber[1..]);
 
-            foreach (char n in number)
+            foreach (char b in roomBlock)
             {
-                if (!char.IsDigit(n))
+                if (char.IsDigit(b)) // if any character in roomBlock is a digit then validRoom is false
                 {
                     validRoom = false;
                 }
@@ -120,16 +137,29 @@ public class CreateModel : PageModel
         {
             validRoom = false;
         }
+
         if (validRoom == false)
         {
             ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
-            ViewData["ActivityID"] = new SelectList(_context.Activity, "ActivityID", "ActivityName");
-            RoomNumberErrorMessage = "This Room does not exist. Please type a valid Room Number, e.g. A37.";
+            RoomNumberErrorMessage = "This Room does not exist. Please type a valid Room, e.g. A37."; // displays error message
             return Page();
         }
 
-        _context.Activity.Add(Activity);
-        await _context.SaveChangesAsync();
+        Activity activity = (from a in _context.Activity
+                             where a.StaffID == Activity.StaffID
+                             select a).FirstOrDefault();
+
+        if (activity != null)
+        {
+            ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
+            StaffErrorMessage = "This Staff is already in charge of an Activity. Please edit the existing record."; // displays error message
+            return Page();
+        }
+        else
+        {
+            _context.Activity.Add(Activity);
+            await _context.SaveChangesAsync();
+        }
 
         return RedirectToPage("./Index");
     }

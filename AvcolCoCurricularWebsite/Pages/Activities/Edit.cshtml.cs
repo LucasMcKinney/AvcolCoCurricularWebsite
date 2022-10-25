@@ -13,6 +13,7 @@ public class EditModel : PageModel
 
     [BindProperty]
     public Activity Activity { get; set; }
+    public string ActivityErrorMessage { get; set; }
     public string RoomNumberErrorMessage { get; set; }
 
     public async Task<IActionResult> OnGetAsync(int? id)
@@ -40,17 +41,23 @@ public class EditModel : PageModel
             return Page();
         }
 
+        if (!Activity.ActivityName.Any(char.IsLetter))
+        {
+            ActivityErrorMessage = "Invalid Activity Name. Activity Name must contain letters only."; // displays error message
+            return Page();
+        }
+
         bool validRoom = true;
-        var block = Activity.RoomNumber.ToUpper()[..1];
+        var block = Activity.RoomNumber[..1];
 
         if (validBlock.Contains(block))
         {
-            char[] number = Activity.RoomNumber[1..].ToCharArray();
+            char[] roomBlock = Activity.RoomNumber[1..].ToUpper().ToCharArray();
             int roomNumber = int.Parse(Activity.RoomNumber[1..]);
 
-            foreach (char n in number)
+            foreach (char b in roomBlock)
             {
-                if (!char.IsDigit(n))
+                if (char.IsDigit(b)) // if any character in roomBlock is a digit then validRoom is false
                 {
                     validRoom = false;
                 }
@@ -66,7 +73,7 @@ public class EditModel : PageModel
                         break;
                     }
                 }
-                else if (block == "B")
+                else if(block == "B")
                 {
                     if (roomNumber < 1 || roomNumber > 17)
                     {
@@ -132,11 +139,11 @@ public class EditModel : PageModel
         {
             validRoom = false;
         }
-        if (!validRoom)
+
+        if (validRoom == false)
         {
             ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
-            ViewData["ActivityID"] = new SelectList(_context.Activity, "ActivityID", "ActivityName");
-            RoomNumberErrorMessage = "This Room does not exist. Please type a valid Room Number, e.g. A37.";
+            RoomNumberErrorMessage = "This Room does not exist. Please type a valid Room, e.g. A37."; // displays error message
             return Page();
         }
 
