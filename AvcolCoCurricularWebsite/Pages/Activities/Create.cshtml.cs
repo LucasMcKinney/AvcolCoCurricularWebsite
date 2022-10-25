@@ -36,11 +36,13 @@ public class CreateModel : PageModel
 
         if (activityName != null)
         {
+            ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
             ActivityErrorMessage = "This Activity already has a record. Please edit the existing record."; // displays error message
             return Page();
         }
         if (!Activity.ActivityName.Any(char.IsLetter))
         {
+            ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
             ActivityErrorMessage = "Invalid Activity Name. Activity Name must contain letters only."; // displays error message
             return Page();
         }
@@ -50,16 +52,12 @@ public class CreateModel : PageModel
 
         if (validBlock.Contains(block))
         {
-            char[] roomBlock = Activity.RoomNumber[1..].ToUpper().ToCharArray();
-            int roomNumber = int.Parse(Activity.RoomNumber[1..]);
+            char[] roomBlock = Activity.RoomNumber[1..].ToCharArray();
+            int roomNumber = int.Parse(Activity.RoomNumber.AsSpan(1));
 
             foreach (char b in roomBlock)
             {
-                if (char.IsDigit(b)) // if any character in roomBlock is a digit then validRoom is false
-                {
-                    validRoom = false;
-                }
-                else if (block == "A")
+                if (block == "A")
                 {
                     if (roomNumber < 1 || roomNumber > 46)
                     {
@@ -141,7 +139,7 @@ public class CreateModel : PageModel
         if (validRoom == false)
         {
             ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
-            RoomNumberErrorMessage = "This Room does not exist. Please type a valid Room, e.g. A37."; // displays error message
+            RoomNumberErrorMessage = "This Room Number does not exist. Please type a valid Room Number, e.g. A37."; // displays error message
             return Page();
         }
 

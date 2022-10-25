@@ -100,7 +100,7 @@ public class CreateModel : PageModel
 
         if (Staff.HireDate > DateTime.Now || Staff.HireDate < BeginningHireDate)
         {
-            HireDateErrorMessage = "Invalid Hire Date.";
+            HireDateErrorMessage = "Invalid Hire Date. Hire Date must be after Avondale College was founded and cannot be in the future."; // displays error message
             return Page();
         }
 

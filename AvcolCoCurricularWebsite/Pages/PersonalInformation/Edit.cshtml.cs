@@ -44,6 +44,7 @@ public class EditModel : PageModel
         }
         if (PersonalInformation.DateOfBirth < EarliestDate || PersonalInformation.DateOfBirth > LatestDate)
         {
+            ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
             DateOfBirthErrorMessage = "Invalid Date of Birth.";
             return Page();
         }
