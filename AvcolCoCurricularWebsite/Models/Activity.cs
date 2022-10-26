@@ -10,7 +10,7 @@ public class Activity
     public string ActivityName { get; set; }
 
     [Display(Name = "Room Number")]
-    [RegularExpression(@"[a-fA-F]\d{1,2}", ErrorMessage = "Invalid Room Number. Room Number must contain either A, B, C, D, E, or F at the beginning, and either 1 or 2 digits at the end.")]
+    [RegularExpression(@"^[A-F][1-9][0-9]{0,1}", ErrorMessage = "Invalid Room Number. Room Number must contain either A, B, C, D, E, or F in capital letters at the beginning, and either 1 or 2 digits at the end.")]
     [StringLength(3, ErrorMessage = "Invalid Room Number. Room Number must be 3 characters long.")]
     [Required]
     public string RoomNumber { get; set; }

@@ -2,7 +2,15 @@
 
 public class EditModel : PageModel
 {
-    private static readonly string[] validBlock = { "A", "B", "C", "D", "E", "F" };
+    private static readonly Dictionary<char, int> _validRooms = new()
+    {
+        { 'A', 46 },
+        { 'B', 17 },
+        { 'C', 29 },
+        { 'D', 29 },
+        { 'E', 12 },
+        { 'F', 14 }
+    };
 
     private readonly AvcolCoCurricularWebsiteContext _context;
 
@@ -49,87 +57,16 @@ public class EditModel : PageModel
         }
 
         bool validRoom = true;
-        var block = Activity.RoomNumber[..1];
+        var block = Activity.RoomNumber[0];
 
-        if (validBlock.Contains(block))
+        if (_validRooms.ContainsKey(block))
         {
-            char[] roomBlock = Activity.RoomNumber[1..].ToCharArray();
             int roomNumber = int.Parse(Activity.RoomNumber.AsSpan(1));
+            int maxRoomNumber = _validRooms[block];
 
-            foreach (char b in roomBlock)
+            if (roomNumber < 1 || roomNumber > maxRoomNumber)
             {
-                if (block == "A")
-                {
-                    if (roomNumber < 1 || roomNumber > 46)
-                    {
-                        validRoom = false;
-                    }
-                    else
-                    {
-                        validRoom = true;
-                        break;
-                    }
-                }
-                else if(block == "B")
-                {
-                    if (roomNumber < 1 || roomNumber > 17)
-                    {
-                        validRoom = false;
-                    }
-                    else
-                    {
-                        validRoom = true;
-                        break;
-                    }
-                }
-                else if (block == "C")
-                {
-                    if (roomNumber < 1 || roomNumber > 29)
-                    {
-                        validRoom = false;
-                    }
-                    else
-                    {
-                        validRoom = true;
-                        break;
-                    }
-                }
-                else if (block == "D")
-                {
-                    if (roomNumber < 1 || roomNumber > 29)
-                    {
-                        validRoom = false;
-                    }
-                    else
-                    {
-                        validRoom = true;
-                        break;
-                    }
-                }
-                else if (block == "E")
-                {
-                    if (roomNumber < 1 || roomNumber > 12)
-                    {
-                        validRoom = false;
-                    }
-                    else
-                    {
-                        validRoom = true;
-                        break;
-                    }
-                }
-                else if (block == "F")
-                {
-                    if (roomNumber < 1 || roomNumber > 14)
-                    {
-                        validRoom = false;
-                    }
-                    else
-                    {
-                        validRoom = true;
-                        break;
-                    }
-                }
+                validRoom = false;
             }
         }
         else
@@ -137,10 +74,10 @@ public class EditModel : PageModel
             validRoom = false;
         }
 
-        if (validRoom == false)
+        if (!validRoom)
         {
             ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
-            RoomNumberErrorMessage = "This Room Number does not exist. Please type a valid Room Number, e.g. A37."; // displays error message
+            RoomNumberErrorMessage = "This Room Number does not exist. Please type a valid Room Number, e.g. D2 or A34."; // displays error message
             return Page();
         }
 
