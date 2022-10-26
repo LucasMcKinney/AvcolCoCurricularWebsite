@@ -39,16 +39,6 @@ public class CreateModel : PageModel
             StaffErrorMessage = "This Staff already has a record. Please edit the existing record."; // displays error message
             return Page();
         }
-        if (!Staff.LastName.Any(char.IsLetter))
-        {
-            LastNameErrorMessage = "Invalid Last Name. Last Name must contain letters only."; // displays error message
-            return Page();
-        }
-        if (!Staff.FirstName.Any(char.IsLetter))
-        {
-            FirstNameErrorMessage = "Invalid First Name. First Name must contain letters only."; // displays error message
-            return Page();
-        }
 
         var lastName = Staff.LastName;
         var teacherCode = " ";

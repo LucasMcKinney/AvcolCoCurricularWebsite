@@ -31,6 +31,7 @@ public class PersonalInformation
     public string ECPhoneNumber { get; set; }
     
     [Display(Name = "Emergency Contact Relationship")]
+    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Invalid Emergency Contact Relationship. Emergency Contact Relationship must contain letters only.")]
     [StringLength(56, ErrorMessage = "Invalid Relationship. Please enter a valid Relationship under 56 characters long (e.g Brother, Friend, etc).")]
     [Required(ErrorMessage = "This field cannot be left empty.")]
     public string ECRelationship { get; set; }

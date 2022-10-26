@@ -49,13 +49,6 @@ public class EditModel : PageModel
             return Page();
         }
 
-        if (!Activity.ActivityName.Any(char.IsLetter))
-        {
-            ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
-            ActivityErrorMessage = "Invalid Activity Name. Activity Name must contain letters only."; // displays error message
-            return Page();
-        }
-
         bool validRoom = true;
         var block = Activity.RoomNumber[0];
 
