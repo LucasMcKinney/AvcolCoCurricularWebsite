@@ -37,11 +37,13 @@
                 <label asp-for="Sport.StartTime" class="control-label"></label>
                 <input asp-for="Sport.StartTime" class="form-control" />
                 <span asp-validation-for="Sport.StartTime" class="text-danger"></span>
+                <span class="text-danger">@Model.StartTimeErrorMessage</span>
             </div>
             <div class="form-group">
                 <label asp-for="Sport.EndTime" class="control-label"></label>
                 <input asp-for="Sport.EndTime" class="form-control" />
                 <span asp-validation-for="Sport.EndTime" class="text-danger"></span>
+                <span class="text-danger">@Model.EndTimeErrorMessage</span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
