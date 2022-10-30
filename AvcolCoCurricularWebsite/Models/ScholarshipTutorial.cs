@@ -16,13 +16,13 @@ public class ScholarshipTutorial
 
     [Display(Name = "Start Time")]
     [DataType(DataType.Time)]
-    [DisplayFormat(DataFormatString = "{0:hh:mm:ss}", ApplyFormatInEditMode = true)]
+    [DisplayFormat(DataFormatString = "{0:hh:mm tt}", ApplyFormatInEditMode = true)]
     [Required(ErrorMessage = "This field cannot be left empty.")]
     public DateTime StartTime { get; set; }
 
     [Display(Name = "End Time")]
     [DataType(DataType.Time)]
-    [DisplayFormat(DataFormatString = "{0:hh:mm:ss}", ApplyFormatInEditMode = true)]
+    [DisplayFormat(DataFormatString = "{0:hh:mm tt}", ApplyFormatInEditMode = true)]
     [Required(ErrorMessage = "This field cannot be left empty.")]
     public DateTime EndTime { get; set; }
 }

@@ -21,7 +21,7 @@ public class Staff
 
     [Display(Name = "Hire Date")]
     [DataType(DataType.Date)]
-    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+    [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
     [Required(ErrorMessage = "This field cannot be left empty.")]
     public DateTime HireDate { get; set; }
 

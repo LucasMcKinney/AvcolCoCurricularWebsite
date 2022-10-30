@@ -29,7 +29,6 @@ public class CreateModel : PageModel
     public Activity Activity { get; set; }
     public string ActivityErrorMessage { get; set; }
     public string RoomNumberErrorMessage { get; set; }
-    public string StaffErrorMessage { get; set; }
 
     public async Task<IActionResult> OnPostAsync()
     {
@@ -71,17 +70,6 @@ public class CreateModel : PageModel
         {
             ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
             RoomNumberErrorMessage = "This Room Number does not exist. Please type a valid Room Number, e.g. D2 or A34."; // displays error message
-            return Page();
-        }
-
-        Activity activity = (from a in _context.Activity
-                             where a.StaffID == Activity.StaffID
-                             select a).FirstOrDefault();
-
-        if (activity != null)
-        {
-            ViewData["StaffID"] = new SelectList(_context.Staff, "StaffID", "FullName");
-            StaffErrorMessage = "This Staff is already in charge of an Activity. Please edit the existing record."; // displays error message
             return Page();
         }
         

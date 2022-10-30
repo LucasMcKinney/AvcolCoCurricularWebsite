@@ -13,6 +13,8 @@ public class EditModel : PageModel
     public PerformingArt PerformingArt { get; set; }
     public string StartTimeErrorMessage { get; set; }
     public string EndTimeErrorMessage { get; set; }
+    public string ActivityErrorMessage { get; set; }
+    public string RoomStaffOccupiedErrorMessage { get; set; }
 
     public async Task<IActionResult> OnGetAsync(int? id)
     {
@@ -28,7 +30,7 @@ public class EditModel : PageModel
         {
             return NotFound();
         }
-       ViewData["ActivityID"] = new SelectList(_context.Activity, "ActivityID", "ActivityName");
+        ViewData["ActivityID"] = new SelectList(_context.Activity, "ActivityID", "ActivityName");
         return Page();
     }
 
@@ -50,6 +52,28 @@ public class EditModel : PageModel
         {
             ViewData["ActivityID"] = new SelectList(_context.Activity, "ActivityID", "ActivityName");
             EndTimeErrorMessage = "Invalid End Time. End Time cannot be less than or equal to Start Time."; // displays error message
+            return Page();
+        }
+
+        var activity = await _context.Activity.FindAsync(PerformingArt.ActivityID);
+
+        if (activity == null)
+        {
+            ViewData["ActivityID"] = new SelectList(_context.Activity, "ActivityID", "ActivityName");
+            ActivityErrorMessage = "An error occurred while processing this Activity. Please try again."; // displays error message
+            return Page();
+        }
+
+        PerformingArt.Activity = activity;
+
+        PerformingArt roomStaffOccupied = (from p in _context.PerformingArt
+                                           where p.Activity.RoomNumber == PerformingArt.Activity.RoomNumber && p.Activity.StaffID == PerformingArt.Activity.StaffID && p.Day == PerformingArt.Day && p.StartTime < PerformingArt.EndTime && p.EndTime > PerformingArt.StartTime
+                                           select p).FirstOrDefault(); // checks if the room and staff set for this activity is occupied between the same start and end times of the day specified on the activity
+
+        if (roomStaffOccupied != null)
+        {
+            ViewData["ActivityID"] = new SelectList(_context.Activity, "ActivityID", "ActivityName");
+            RoomStaffOccupiedErrorMessage = "The Room and Staff set for this activity is occupied between these times. Please change the Day, Start Time, or End Time."; // displays error message
             return Page();
         }
 

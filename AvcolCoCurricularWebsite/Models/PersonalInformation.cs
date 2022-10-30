@@ -10,7 +10,7 @@ public class PersonalInformation
 
     [Display(Name = "Date of Birth")]
     [DataType(DataType.Date)]
-    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+    [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
     [Required(ErrorMessage = "This field cannot be left empty.")]
     public DateTime DateOfBirth { get; set; }
 

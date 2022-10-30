@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using AvcolCoCurricularWebsite.Data;
-using AvcolCoCurricularWebsite.Models;
-
-namespace AvcolCoCurricularWebsite.Pages.Activities;
+﻿namespace AvcolCoCurricularWebsite.Pages.Activities;
 
 public class DeleteModel : PageModel
 {
