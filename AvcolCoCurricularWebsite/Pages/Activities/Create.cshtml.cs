@@ -37,9 +37,9 @@ public class CreateModel : PageModel
             return Page();
         }
 
-        var activityName = (from s in _context.Activity
-                            where s.ActivityName == Activity.ActivityName
-                            select s).FirstOrDefault(); // checks if there are any activities with the same name which already exists
+        var activityName = (from a in _context.Activity
+                            where a.ActivityName == Activity.ActivityName
+                            select a).FirstOrDefault(); // checks if there are any activities with the same name which already exists
 
         if (activityName != null)
         {
